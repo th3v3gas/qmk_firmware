@@ -1,11 +1,16 @@
 #include QMK_KEYBOARD_H
 
-//unicode WinCompose rules.mk (UNICODE_ENABLE = yes) config.h (#define UNICODE_KEY_WINC KC_RALT)
+//unicode WinCompose
+//<https://github.com/samhocevar/wincompose>  default compose key, (r-alt)
+//rules.mk (UNICODE_ENABLE = yes)             if changed, edit config.h to match.
+//config.h (#define UNICODE_KEY_WINC KC_RALT) <--
 void matrix_init_user(void) {
     set_unicode_input_mode(UC_WINC);
 };
 
-//tap dance rules.mk (TAP_DANCE_ENABLE = yes)
+//tap dance
+//rules.mk (TAP_DANCE_ENABLE = yes)
+//config.h (#define TAPPING_TERM 170) double tap window 150-200
 enum {
 	TD_LBRC,
 	TD_RBRC,
@@ -39,7 +44,9 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 	[TD_EMO] = ACTION_TAP_DANCE_FN(TDEMO),
 };
 
-//combos, rules.mk (COMBO_ENABLE = yes) config.h (#define COMBO_COUNT 2) Change combo count as needed
+//combos
+//rules.mk (COMBO_ENABLE = yes)
+//config.h (#define COMBO_COUNT 2) Change combo count as needed (#define COMBO_TERM 50) combo window ~50
 enum combos {
 	co_qm,
 	co_ep
@@ -50,6 +57,7 @@ combo_t key_combos[COMBO_COUNT] = {
   [co_qm] = COMBO(qm_combo, KC_QUES),
 	[co_ep] = COMBO(ep_combo, KC_EXLM)
 };
+
 /*
 //macros
 enum custom_keycodes{
@@ -74,6 +82,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	return true;
 };
 */
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*	Base Layer
 *	,-------------------------------------------------------------------------.
@@ -81,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-------------------------------------------------------------------------+
 *	|Tab/L3|  A  |  S  |  D  |  F  |  G  |  H  |  J  |  K  |  L  |  ;  |   '  |
 *	|-------------------------------------------------------------------------+
-*	| Shift |  Z  |  X  |  C  |  V  |  B  |  N  |M(?) |,(?!)|.(!) |emote| Ent | Comb(m+,)=? Comb(,+.)=!
+*	| Shift |  Z  |  X  |  C  |  V  |  B  |  N  |M(?) |,(?!)|.(!) |emote| Ent | Combo (m+,)=? Combo (,+.)=!
 *	|-------------------------------------------------------------------------+
 *	| Ctrl|  _  |=/Alt|  /  |   *  |   Space   |  Del | Left| Down|  Up |Right|
 *	`-------------------------------------------------------------------------'
