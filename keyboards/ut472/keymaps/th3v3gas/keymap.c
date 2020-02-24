@@ -1,5 +1,5 @@
 #include QMK_KEYBOARD_H
-//this is a test
+
 //unicode WinCompose rules.mk (UNICODE_ENABLE = yes) config.h (#define UNICODE_KEY_WINC KC_RALT)
 void matrix_init_user(void) {
     set_unicode_input_mode(UC_WINC);
