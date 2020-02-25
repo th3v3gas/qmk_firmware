@@ -1,9 +1,9 @@
 #include QMK_KEYBOARD_H
 
 //unicode WinCompose
-//<https://github.com/samhocevar/wincompose>  default compose key, (r-alt)
-//rules.mk (UNICODE_ENABLE = yes)             if changed, edit config.h to match.
-//config.h (#define UNICODE_KEY_WINC KC_RALT) <--
+//<https://github.com/samhocevar/wincompose>  default compose key is [KC_RALT]
+//rules.mk (UNICODE_ENABLE = yes)
+//config.h (#define UNICODE_KEY_WINC KC_RALT) <-- edit config.h to match.
 void matrix_init_user(void) {
     set_unicode_input_mode(UC_WINC);
 };
@@ -24,13 +24,11 @@ enum {
 void TDEMO (qk_tap_dance_state_t *state, void *user_data) {
 	switch(state->count){
 		case 1:
-			send_unicode_hex_string("00AF 005C 005F 0028 30C4 0029 005F 002F 00AF");
+			send_unicode_hex_string("00AF 005C 005F 0028 30C4 0029 005F 002F 00AF");  //unicode
 			break;
 		case 2:
 			send_string(":]");
 			break;
-    default:
-	break;
 	}
 }
 qk_tap_dance_action_t tap_dance_actions[] = {
@@ -46,7 +44,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 //combos
 //rules.mk (COMBO_ENABLE = yes)
-//config.h (#define COMBO_COUNT 2) Change combo count as needed (#define COMBO_TERM 50) combo window ~50
+//config.h (#define COMBO_COUNT 2) change combo count as needed (#define COMBO_TERM 50) combo window ~50
 enum combos {
 	co_qm,
 	co_ep
@@ -59,7 +57,7 @@ combo_t key_combos[COMBO_COUNT] = {
 };
 
 /*
-//macros
+//macros (unused macros. left in as example)
 enum custom_keycodes{
 	SHRUG = SAFE_RANGE,
 	SMILE,
@@ -68,7 +66,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
 		case SHRUG:
 			if (record->event.pressed) {
-				send_unicode_hex_string("00AF 005C 005F 0028 30C4 0029 005F 002F 00AF");
+				send_unicode_hex_string("00AF 005C 005F 0028 30C4 0029 005F 002F 00AF");  //unicode
 			} else {
 			}
 			break;
