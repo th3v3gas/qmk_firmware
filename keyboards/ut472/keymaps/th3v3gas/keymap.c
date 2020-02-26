@@ -20,6 +20,8 @@ enum {
 	TD_NP3,
 	TD_NP4,
 	TD_EMO,
+  TD_LHO,
+  TD_REN
 };
 void TDEMO (qk_tap_dance_state_t *state, void *user_data) {
 	switch(state->count){
@@ -27,7 +29,7 @@ void TDEMO (qk_tap_dance_state_t *state, void *user_data) {
 			send_unicode_hex_string("00AF 005C 005F 0028 30C4 0029 005F 002F 00AF");  //unicode
 			break;
 		case 2:
-			send_string(":]");
+			send_string("UwU");
 			break;
 	}
 }
@@ -40,11 +42,13 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 	[TD_NP3] = ACTION_TAP_DANCE_DOUBLE(KC_3, KC_P3),
 	[TD_NP4] = ACTION_TAP_DANCE_DOUBLE(KC_4, KC_P4),
 	[TD_EMO] = ACTION_TAP_DANCE_FN(TDEMO),
+  [TD_LHO] = ACTION_TAP_DANCE_DOUBLE(KC_LEFT, KC_HOME),
+  [TD_REN] = ACTION_TAP_DANCE_DOUBLE(KC_RIGHT, KC_END)
 };
 
 //combos
 //rules.mk (COMBO_ENABLE = yes)
-//config.h (#define COMBO_COUNT 2) change combo count as needed (#define COMBO_TERM 50) combo window ~50
+//config.h (#define COMBO_COUNT 2) Change combo count as needed (#define COMBO_TERM 50) combo window ~50
 enum combos {
 	co_qm,
 	co_ep
@@ -84,23 +88,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*	Base Layer
 *	,-------------------------------------------------------------------------.
-*	| /Esc|  Q  |  W  |  E  |  R  |  T  |  Y  |  U  |  I  |  O  |  P  |Bspace | (Ctrl+Alt)/esc
+*	|(esc)|  Q  |  W  |  E  |  R  |  T  |  Y  |  U  |  I  |  O  |  P  |Bspace | (ctrl+alt)/esc
 *	|-------------------------------------------------------------------------+
 *	|Tab/L3|  A  |  S  |  D  |  F  |  G  |  H  |  J  |  K  |  L  |  ;  |   '  |
 *	|-------------------------------------------------------------------------+
-*	| Shift |  Z  |  X  |  C  |  V  |  B  |  N  |M(?) |,(?!)|.(!) |emote| Ent | Combo (m+,)=? Combo (,+.)=!
+*	| Shift |  Z  |  X  |  C  |  V  |  B  |  N  |M(?) |,(?!)|.(!) |emote| Ent | combo (m+,)=? combo (,+.)=!
 *	|-------------------------------------------------------------------------+
-*	| Ctrl|  _  |=/Alt|  /  |   *  |   Space   |  Del | Left| Down|  Up |Right|
+*	| Ctrl|  _  |=/Alt|  /  |   *  |   Space   |  Del |<(HM)| Down|>(EN)|Right| tap dance left(home) right(end)
 *	`-------------------------------------------------------------------------'
 */
 	[0] = LAYOUT(LCA_T(KC_ESC), KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC,
 		LT(1,KC_TAB), KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, LT(2,KC_QUOT),
 		KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, TD(TD_EMO), KC_SFTENT,
-		KC_LCTL, KC_UNDS, LALT_T(KC_EQL), KC_PSLS, KC_PAST, KC_SPC, LT(3,KC_DEL), KC_LEFT, KC_DOWN, KC_UP, KC_RGHT),
+		KC_LCTL, KC_UNDS, LALT_T(KC_EQL), KC_PSLS, KC_PAST, KC_SPC, LT(3,KC_DEL), TD(TD_LHO), KC_DOWN, KC_UP, TD(TD_REN)),
 /*
 *	Layer 1 tab
 *	,-------------------------------------------------------------------------.
-*	| ` ~ |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |9([) |0(]) |       | Tap dance [ ]
+*	| ` ~ |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |9([) |0(]) |       | tap dance [ ]
 *	|-------------------------------------------------------------------------+
 *	|      |     |     |     |     |     |     |     |     |     |     |  \   |
 *	|-------------------------------------------------------------------------+
@@ -116,11 +120,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
 *	Layer 2 '
 *	,-------------------------------------------------------------------------.
-*	| ` ~ |(np)1|(np)2|(np)3|(np)4|  5  |  6  |  7  |  8  |9([) |0(]) |       | Tap dance Numpad 1-4 [ ]
+*	| ` ~ |(np)1|(np)2|(np)3|(np)4|  5  |  6  |  7  |  8  |9([) |0(]) |       | tap dance NumPad 1-4 [ ]
 *	|-------------------------------------------------------------------------+
-*	|      |  N5  | N6  | N7 |  N8 |     |     |     |     |     |     |      |
+*	|      |  n5  | n6  | n7 |  n8 |     |     |     |     |     |     |      |
 *	|-------------------------------------------------------------------------+
-*	|       | N9  | N0  |     |     |     |     |     |     |     |     |     |
+*	|       | n9  | n0  |     |     |     |     |     |     |     |     |     |
 *	|-------------------------------------------------------------------------+
 *	|     |  @  |     |  -  |  +   |          |       |     |     |rCtl | Gui |
 *	`-------------------------------------------------------------------------'
@@ -134,7 +138,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	,-------------------------------------------------------------------------.
 *	| Esc | F1  | F2  | F3  | F4  | F5  | F6  | F7  | F8  | F9  | F10 |PrtScr |
 *	|-------------------------------------------------------------------------+
-*	|CapLoc| F11 | F12 |     |     |     |     |     |     |RGB- |RGB+ |      | Tap dance caplock
+*	| (CL) | F11 | F12 |     |     |     |     |     |     |RGB- |RGB+ |      | tap dance CapLock
 *	|-------------------------------------------------------------------------+
 *	|       |     |     |     |     |     |     |     |     | Br- | Br+ |RGBt |
 *	|-------------------------------------------------------------------------+
