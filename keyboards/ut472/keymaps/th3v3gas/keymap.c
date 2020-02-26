@@ -23,6 +23,7 @@ enum {
   TD_LHO,
   TD_REN
 };
+// ¯\_(ツ)_/¯ on tap UwU on double tap
 void TDEMO (qk_tap_dance_state_t *state, void *user_data) {
 	switch(state->count){
 		case 1:
