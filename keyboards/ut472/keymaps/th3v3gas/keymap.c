@@ -11,18 +11,61 @@ void matrix_init_user(void) {
 //tap dance
 //rules.mk (TAP_DANCE_ENABLE = yes)
 //config.h (#define TAPPING_TERM 170) double tap window 150-200
-enum {
-	TD_LBRC,
-	TD_RBRC,
-	TD_CAPS,
-	TD_NP1,
-	TD_NP2,
-	TD_NP3,
-	TD_NP4,
-	TD_EMO,
-  TD_LHO,
-  TD_REN
+enum custom_keycodes {TD_LBRC,
+  TD_RBRC,
+  TD_CAPS,
+  TD_NP1,
+  TD_NP2,
+  TD_NP3,
+  TD_NP4,
+  TD_EMO,
+  TD_DHO,
+  TD_UEN,
+  TD_UWU
 };
+// ' on tap layer 2 on hold Uwu on double tap 
+typedef enum {
+  SINGLE_TAP,
+  SINGLE_HOLD,
+  DOUBLE_SINGLE_TAP
+} td_state_t;
+static td_state_t td_state;
+int cur_dance (qk_tap_dance_state_t *state);
+void tduwu_finished (qk_tap_dance_state_t *state, void *user_data);
+void tduwu_reset (qk_tap_dance_state_t *state, void *user_data);
+int cur_dance (qk_tap_dance_state_t *state) {
+  if (state->count == 1) {
+      if (state->interrupted || !state->pressed) { return SINGLE_TAP; }
+        else { return SINGLE_HOLD; }
+  }
+  if (state->count == 2) { return DOUBLE_SINGLE_TAP; }
+  else { return 3; }
+}
+void tduwu_finished (qk_tap_dance_state_t *state, void *user_date) {
+  td_state = cur_dance(state);
+  switch (td_state) {
+    case SINGLE_TAP:
+      register_code16(KC_BSLS);
+      break;
+    case SINGLE_HOLD:
+      layer_on(2);
+      break;
+    case DOUBLE_SINGLE_TAP:
+      send_string("UwU");
+  }
+}
+void tduwu_reset (qk_tap_dance_state_t *state, void *user_data) {
+  switch (td_state) {
+    case SINGLE_TAP:
+      unregister_code(KC_BSLS);
+      break;
+    case SINGLE_HOLD:
+      layer_off(2);
+      break;
+    case DOUBLE_SINGLE_TAP:
+      unregister_code16(KC_DOT);
+  }
+}
 // ¯\_(ツ)_/¯ on tap UwU on double tap
 void TDEMO (qk_tap_dance_state_t *state, void *user_data) {
 	switch(state->count){
@@ -30,8 +73,7 @@ void TDEMO (qk_tap_dance_state_t *state, void *user_data) {
 			send_unicode_hex_string("00AF 005C 005F 0028 30C4 0029 005F 002F 00AF");  //unicode
 			break;
 		case 2:
-			send_string("UwU");
-			break;
+			send_string(":]");
 	}
 }
 qk_tap_dance_action_t tap_dance_actions[] = {
@@ -43,8 +85,9 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 	[TD_NP3] = ACTION_TAP_DANCE_DOUBLE(KC_3, KC_P3),
 	[TD_NP4] = ACTION_TAP_DANCE_DOUBLE(KC_4, KC_P4),
 	[TD_EMO] = ACTION_TAP_DANCE_FN(TDEMO),
-  [TD_LHO] = ACTION_TAP_DANCE_DOUBLE(KC_LEFT, KC_HOME),
-  [TD_REN] = ACTION_TAP_DANCE_DOUBLE(KC_RIGHT, KC_END)
+  [TD_DHO] = ACTION_TAP_DANCE_DOUBLE(KC_DOWN, KC_HOME),
+  [TD_UEN] = ACTION_TAP_DANCE_DOUBLE(KC_UP, KC_END),
+  [TD_UWU] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tduwu_finished, tduwu_reset)
 };
 
 //combos
@@ -99,9 +142,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	`-------------------------------------------------------------------------'
 */
 	[0] = LAYOUT(LCA_T(KC_ESC), KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC,
-		LT(1,KC_TAB), KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, LT(2,KC_QUOT),
+		LT(1,KC_TAB), KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, TD(TD_UWU),
 		KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, TD(TD_EMO), KC_SFTENT,
-		KC_LCTL, KC_UNDS, LALT_T(KC_EQL), KC_PSLS, KC_PAST, KC_SPC, LT(3,KC_DEL), TD(TD_LHO), KC_DOWN, KC_UP, TD(TD_REN)),
+		KC_LCTL, KC_UNDS, LALT_T(KC_EQL), KC_PSLS, KC_PAST, KC_SPC, LT(3,KC_DEL), KC_LEFT, TD(TD_DHO), TD(TD_UEN), KC_RIGHT),
 /*
 *	Layer 1 tab
 *	,-------------------------------------------------------------------------.
