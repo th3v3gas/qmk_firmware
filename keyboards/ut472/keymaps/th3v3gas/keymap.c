@@ -23,7 +23,7 @@ enum custom_keycodes {TD_LBRC,
   TD_UEN,
   TD_UWU
 };
-// ' on tap layer 2 on hold Uwu on double tap 
+// ' on tap layer 2 on hold Uwu on double tap
 typedef enum {
   SINGLE_TAP,
   SINGLE_HOLD,
@@ -35,8 +35,8 @@ void tduwu_finished (qk_tap_dance_state_t *state, void *user_data);
 void tduwu_reset (qk_tap_dance_state_t *state, void *user_data);
 int cur_dance (qk_tap_dance_state_t *state) {
   if (state->count == 1) {
-      if (state->interrupted || !state->pressed) { return SINGLE_TAP; }
-        else { return SINGLE_HOLD; }
+    if (state->interrupted || !state->pressed) { return SINGLE_TAP; }
+      else { return SINGLE_HOLD; }
   }
   if (state->count == 2) { return DOUBLE_SINGLE_TAP; }
   else { return 3; }
@@ -45,7 +45,7 @@ void tduwu_finished (qk_tap_dance_state_t *state, void *user_date) {
   td_state = cur_dance(state);
   switch (td_state) {
     case SINGLE_TAP:
-      register_code16(KC_BSLS);
+      register_code16(KC_QUOT);
       break;
     case SINGLE_HOLD:
       layer_on(2);
@@ -57,34 +57,34 @@ void tduwu_finished (qk_tap_dance_state_t *state, void *user_date) {
 void tduwu_reset (qk_tap_dance_state_t *state, void *user_data) {
   switch (td_state) {
     case SINGLE_TAP:
-      unregister_code(KC_BSLS);
+      unregister_code(KC_QUOT);
       break;
     case SINGLE_HOLD:
       layer_off(2);
       break;
     case DOUBLE_SINGLE_TAP:
-      unregister_code16(KC_DOT);
+      unregister_code16(KC_TRNS);
   }
 }
 // ¯\_(ツ)_/¯ on tap UwU on double tap
 void TDEMO (qk_tap_dance_state_t *state, void *user_data) {
-	switch(state->count){
-		case 1:
-			send_unicode_hex_string("00AF 005C 005F 0028 30C4 0029 005F 002F 00AF");  //unicode
-			break;
-		case 2:
-			send_string(":]");
-	}
+  switch(state->count){
+    case 1:
+      send_unicode_hex_string("00AF 005C 005F 0028 30C4 0029 005F 002F 00AF");  //unicode
+      break;
+    case 2:
+      send_string(":]");
+    }
 }
 qk_tap_dance_action_t tap_dance_actions[] = {
-	[TD_LBRC] = ACTION_TAP_DANCE_DOUBLE(KC_9, KC_LBRC),
-	[TD_RBRC] = ACTION_TAP_DANCE_DOUBLE(KC_0, KC_RBRC),
-	[TD_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_TRNS, KC_CAPS),
-	[TD_NP1] = ACTION_TAP_DANCE_DOUBLE(KC_1, KC_P1),
-	[TD_NP2] = ACTION_TAP_DANCE_DOUBLE(KC_2, KC_P2),
-	[TD_NP3] = ACTION_TAP_DANCE_DOUBLE(KC_3, KC_P3),
-	[TD_NP4] = ACTION_TAP_DANCE_DOUBLE(KC_4, KC_P4),
-	[TD_EMO] = ACTION_TAP_DANCE_FN(TDEMO),
+  [TD_LBRC] = ACTION_TAP_DANCE_DOUBLE(KC_9, KC_LBRC),
+  [TD_RBRC] = ACTION_TAP_DANCE_DOUBLE(KC_0, KC_RBRC),
+  [TD_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_TRNS, KC_CAPS),
+  [TD_NP1] = ACTION_TAP_DANCE_DOUBLE(KC_1, KC_P1),
+  [TD_NP2] = ACTION_TAP_DANCE_DOUBLE(KC_2, KC_P2),
+  [TD_NP3] = ACTION_TAP_DANCE_DOUBLE(KC_3, KC_P3),
+  [TD_NP4] = ACTION_TAP_DANCE_DOUBLE(KC_4, KC_P4),
+  [TD_EMO] = ACTION_TAP_DANCE_FN(TDEMO),
   [TD_DHO] = ACTION_TAP_DANCE_DOUBLE(KC_DOWN, KC_HOME),
   [TD_UEN] = ACTION_TAP_DANCE_DOUBLE(KC_UP, KC_END),
   [TD_UWU] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tduwu_finished, tduwu_reset)
@@ -94,14 +94,14 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 //rules.mk (COMBO_ENABLE = yes)
 //config.h (#define COMBO_COUNT 2) Change combo count as needed (#define COMBO_TERM 50) combo window ~50
 enum combos {
-	co_qm,
-	co_ep
+  co_qm,
+  co_ep
 };
 const uint16_t PROGMEM ep_combo[] = {KC_COMM, KC_DOT, COMBO_END};
 const uint16_t PROGMEM qm_combo[] = {KC_M, KC_COMM, COMBO_END};
 combo_t key_combos[COMBO_COUNT] = {
   [co_qm] = COMBO(qm_combo, KC_QUES),
-	[co_ep] = COMBO(ep_combo, KC_EXLM)
+  [co_ep] = COMBO(ep_combo, KC_EXLM)
 };
 
 /*
@@ -134,10 +134,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	,-------------------------------------------------------------------------.
 *	|(esc)|  Q  |  W  |  E  |  R  |  T  |  Y  |  U  |  I  |  O  |  P  |Bspace | (ctrl+alt)/esc
 *	|-------------------------------------------------------------------------+
-*	|Tab/L3|  A  |  S  |  D  |  F  |  G  |  H  |  J  |  K  |  L  |  ;  |   '  |
+*	|Tab/L3|  A  |  S  |  D  |  F  |  G  |  H  |  J  |  K  |  L  |  ;  |'/2uwu|  tap dance ' '(layer 2) uwu'
 *	|-------------------------------------------------------------------------+
 *	| Shift |  Z  |  X  |  C  |  V  |  B  |  N  |M(?) |,(?!)|.(!) |emote| Ent | combo (m+,)=? combo (,+.)=!
-*	|-------------------------------------------------------------------------+
+*	|-------------------------------------------------------------------------+ tap dance emote ¯\_(ツ)_/¯ :]
 *	| Ctrl|  _  |=/Alt|  /  |   *  |   Space   |  Del |<(HM)| Down|>(EN)|Right| tap dance left(home) right(end)
 *	`-------------------------------------------------------------------------'
 */
