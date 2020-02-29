@@ -97,8 +97,8 @@ enum combos {
   co_qm,
   co_ep
 };
-const uint16_t PROGMEM ep_combo[] = {KC_COMM, KC_DOT, COMBO_END};
-const uint16_t PROGMEM qm_combo[] = {KC_M, KC_COMM, COMBO_END};
+const uint16_t PROGMEM qm_combo[] = {KC_COMM, KC_DOT, COMBO_END};
+const uint16_t PROGMEM ep_combo[] = {KC_M, KC_COMM, COMBO_END};
 combo_t key_combos[COMBO_COUNT] = {
   [co_qm] = COMBO(qm_combo, KC_QUES),
   [co_ep] = COMBO(ep_combo, KC_EXLM)
