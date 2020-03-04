@@ -73,7 +73,7 @@ void tduwu_reset (qk_tap_dance_state_t *state, void *user_data) {
 void TDEMO1 (qk_tap_dance_state_t *state, void *user_data) {
   switch(state->count){
     case 1:
-      send_unicode_string("¯\_(ツ)_/¯");
+      send_unicode_hex_string("00AF 005C 005F 0028 30C4 0029 005F 002F 00AF"); //unicode
       break;
     case 2:
       send_string("UwU");
