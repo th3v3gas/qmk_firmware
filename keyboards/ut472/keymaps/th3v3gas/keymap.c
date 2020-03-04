@@ -21,7 +21,7 @@ enum custom_keycodes {TD_LBRC,
   TD_EMO1,
   TD_DHO,
   TD_UEN,
-  TD_EMO2,
+  TD_EMO2
 //  TD_UWU
 };
 /*
@@ -76,16 +76,16 @@ void TDEMO1 (qk_tap_dance_state_t *state, void *user_data) {
       send_unicode_hex_string("00AF 005C 005F 0028 30C4 0029 005F 002F 00AF"); //unicode
       break;
     case 2:
-      send_string(":]");
+      send_string("UwU");
     }
 }
 void TDEMO2 (qk_tap_dance_state_t *state, void *user_data) {
   switch(state->count){
     case 1:
-      send_unicode_hex_string("0028 256F 00B0 25A1 00B0 0029 256F FE35 0020 253B 2501 253B"); //unicode
+      send_unicode_string("(╯°□°)╯︵ ┻━┻"); //unicode
       break;
     case 2:
-      send_string("UwU");
+      send_unicode_string("┬─┬ノ(°_°ノ)");
     }
 }
 qk_tap_dance_action_t tap_dance_actions[] = {
@@ -99,7 +99,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_EMO1] = ACTION_TAP_DANCE_FN(TDEMO1),
   [TD_DHO] = ACTION_TAP_DANCE_DOUBLE(KC_DOWN, KC_HOME),
   [TD_UEN] = ACTION_TAP_DANCE_DOUBLE(KC_UP, KC_END),
-  [TD_EMO2] = ACTION_TAP_DANCE_FN(TDEMO2),
+  [TD_EMO2] = ACTION_TAP_DANCE_FN(TDEMO2)
 //  [TD_UWU] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tduwu_finished, tduwu_reset)
 };
 
@@ -150,7 +150,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|Tab/L1|  A  |  S  |  D  |  F  |  G  |  H  |  J  |  K  |  L  |  ;  | '/L2 |
 *	|-------------------------------------------------------------------------+
 *	| Shift |  Z  |  X  |  C  |  V  |  B  |  N  |M(?) |,(?!)|.(!) |emote| Ent | combo (m+,)=! combo (,+.)=?
-*	|-------------------------------------------------------------------------+ tap dance emote ¯\_(ツ)_/¯ :]
+*	|-------------------------------------------------------------------------+ tap dance emote ¯\_(ツ)_/¯ UwU
 *	| Ctrl|  _  |=/Alt|  /  |   *  |   Space   |Del/L3| left|V(HO)|^(EN)|Right| tap dance down(home) up(end)
 *	`-------------------------------------------------------------------------'
 */
@@ -165,7 +165,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-------------------------------------------------------------------------+
 *	|      |     |     |     |     |     |     |     |     |     |     |  \   |
 *	|-------------------------------------------------------------------------+
-*	|       |     |     |     |     |     |     |     |     |     |emote|     | tap dance emote (╯°□°)╯︵ ┻━┻
+*	|       |     |     |     |     |     |     |     |     |     |emote|     | tap dance emote (╯°□°)╯︵ ┻━┻ ┬─┬ノ(°_°ノ))
 *	|-------------------------------------------------------------------------+
 *	|     |  @  |     |  -  |  +   |          |       | Home| PgDn| PgUp| End |
 *	`-------------------------------------------------------------------------'
