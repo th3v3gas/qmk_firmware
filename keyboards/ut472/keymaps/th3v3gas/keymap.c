@@ -24,7 +24,8 @@ enum custom_keycodes {TD_LBRC,
   TD_EMO2
 //  TD_UWU
 };
-/*
+
+/* tap dance hold example
 // ' on tap layer 2 on hold Uwu on double tap
 typedef enum {
   SINGLE_TAP,
@@ -69,11 +70,12 @@ void tduwu_reset (qk_tap_dance_state_t *state, void *user_data) {
   }
 }
 */
+
 // ¯\_(ツ)_/¯ on tap UwU on double tap
 void TDEMO1 (qk_tap_dance_state_t *state, void *user_data) {
   switch(state->count){
     case 1:
-      send_unicode_hex_string("00AF 005C 005F 0028 30C4 0029 005F 002F 00AF"); //unicode
+      send_unicode_string("¯\\_(ツ)_/¯");
       break;
     case 2:
       send_string("UwU");
