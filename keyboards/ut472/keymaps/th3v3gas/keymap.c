@@ -20,8 +20,7 @@ enum custom_keycodes {TD_LBRC,
   TD_NP4,
   TD_EMO1,
   TD_DHO,
-  TD_UEN,
-  TD_EMO2
+  TD_UEN
 };
 // ¯\_(ツ)_/¯ on tap, UwU on double tap
 void TDEMO1 (qk_tap_dance_state_t *state, void *user_data) {
@@ -31,16 +30,6 @@ void TDEMO1 (qk_tap_dance_state_t *state, void *user_data) {
       break;
     case 2:
       send_string("UwU");
-    }
-}
-// (╯°□°)╯︵ ┻━┻ on tap, ┬─┬ノ(°_°ノ) on dougle tap
-void TDEMO2 (qk_tap_dance_state_t *state, void *user_data) {
-  switch(state->count){
-    case 1:
-      send_unicode_string("(╯°□°)╯︵ ┻━┻");
-      break;
-    case 2:
-      send_unicode_string("┬─┬ノ(°_°ノ)");
     }
 }
 qk_tap_dance_action_t tap_dance_actions[] = {
@@ -53,8 +42,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_NP4] = ACTION_TAP_DANCE_DOUBLE(KC_4, KC_P4),
   [TD_EMO1] = ACTION_TAP_DANCE_FN(TDEMO1),
   [TD_DHO] = ACTION_TAP_DANCE_DOUBLE(KC_DOWN, KC_HOME),
-  [TD_UEN] = ACTION_TAP_DANCE_DOUBLE(KC_UP, KC_END),
-  [TD_EMO2] = ACTION_TAP_DANCE_FN(TDEMO2)
+  [TD_UEN] = ACTION_TAP_DANCE_DOUBLE(KC_UP, KC_END)
 };
 
 //combos
@@ -94,14 +82,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-------------------------------------------------------------------------+
 *	|      |     |     |     |     |     |     |     |     |     |     |  \   |
 *	|-------------------------------------------------------------------------+
-*	|       |     |     |     |     |     |     |     |     |     |emote|     | tap dance emote (╯°□°)╯︵ ┻━┻, ┬─┬ノ(°_°ノ))
+*	|       |     |     |     |     |     |     |     |     |     |     |     |
 *	|-------------------------------------------------------------------------+
 *	|     |  @  |     |  -  |  +   |          |       | Home| PgDn| PgUp| End |
 *	`-------------------------------------------------------------------------'
 */
 	[1] = LAYOUT(KC_GRV, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, TD(TD_LBRC), TD(TD_RBRC), KC_TRNS,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_BSLS,
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, TD(TD_EMO2), KC_TRNS,
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
 		KC_TRNS, KC_AT, KC_TRNS, KC_PMNS, KC_PPLS, KC_TRNS, KC_TRNS, KC_HOME, KC_PGDN, KC_PGUP, KC_END),
 /*
 *	Layer 2 '
