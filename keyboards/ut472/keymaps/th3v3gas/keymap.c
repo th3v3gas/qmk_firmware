@@ -64,35 +64,52 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	,-------------------------------------------------------------------------.
 *	|(esc)|  Q  |  W  |  E  |  R  |  T  |  Y  |  U  |  I  |  O  |  P  |Bspace | (ctrl+alt)/esc
 *	|-------------------------------------------------------------------------+
-*	|Tab/L1|  A  |  S  |  D  |  F  |  G  |  H  |  J  |  K  |  L  |  ;  | '/L2 |
+*	|Tab/L2|  A  |  S  |  D  |  F  |  G  |  H  |  J  |  K  |  L  |  ;  | '/L3 |
 *	|-------------------------------------------------------------------------+
 *	| Shift |  Z  |  X  |  C  |  V  |  B  |  N  |M(?) |,(?!)|.(!) |emote| Ent | combo (m+,)=! combo (,+.)=? tap dance emote ¯\_(ツ)_/¯, UwU
 *	|-------------------------------------------------------------------------+
-*	| Ctrl|  _  |=/Alt|  /  |   *  |   Space   |Del/L3| left|V(HO)|^(EN)|Right| tap dance down(home) up(end)
+*	| Ctrl|  _  |=/Alt|  /  |   *  |   Space   |Del/L4| left|V(HO)|^(EN)|Right| tap dance down(home) up(end)
 *	`-------------------------------------------------------------------------'
 */
 	[0] = LAYOUT(LCA_T(KC_ESC), KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC,
-		LT(1,KC_TAB), KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, LT(2,KC_QUOT),
+		LT(2,KC_TAB), KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, LT(3,KC_QUOT),
 		KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, TD(TD_EMO1), KC_SFTENT,
-		KC_LCTL, KC_UNDS, LALT_T(KC_EQL), KC_PSLS, KC_PAST, KC_SPC, LT(3,KC_DEL), KC_LEFT, TD(TD_DHO), TD(TD_UEN), KC_RIGHT),
+		KC_LCTL, KC_UNDS, LALT_T(KC_EQL), KC_PSLS, KC_PAST, KC_SPC, LT(4,KC_DEL), KC_LEFT, TD(TD_DHO), TD(TD_UEN), KC_RIGHT),
+
+/*	Game Layer
+*	,-------------------------------------------------------------------------.
+*	|(esc)|  Q  |  -  |  W  |  E  |  R  |  +  |  U  |  I  |  O  |  P  |Bspace | (ctrl+alt)/esc
+*	|-------------------------------------------------------------------------+
+*	|Tab/L2|  F  |  A  |  S  |  D  |  G  |  H  |  J  |  K  |  L  |  ;  | '/L3 |
+*	|-------------------------------------------------------------------------+
+*	| Shift |  V  |  Z  |  X  |  C  |  B  |  N  |M(?) |,(?!)|.(!) |emote| Ent | combo (m+,)=! combo (,+.)=? tap dance emote ¯\_(ツ)_/¯, UwU
+*	|-------------------------------------------------------------------------+
+*	| Ctrl|  _  |=/Alt|  /  |   *  |   Space   |Del/L4|     |     |     | L(0)|
+*	`-------------------------------------------------------------------------'
+*/
+	[1] = LAYOUT(LCA_T(KC_ESC), KC_Q, KC_PMNS, KC_W, KC_E, KC_R, KC_PPLS, KC_U, KC_I, KC_O, KC_P, KC_BSPC,
+		LT(2,KC_TAB), KC_F, KC_A, KC_S, KC_D, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, LT(3,KC_QUOT),
+		KC_LSFT, KC_V, KC_Z, KC_X, KC_C, KC_TAB, KC_N, KC_M, KC_B, KC_DOT, TD(TD_EMO1), KC_SFTENT,
+		KC_LCTL, KC_UNDS, LALT_T(KC_EQL), KC_PSLS, KC_PAST, KC_SPC, LT(4,KC_DEL), KC_TRNS, KC_TRNS, KC_TRNS, DF(0)),
+
 /*
-*	Layer 1 tab
+*	Layer 2 tab
 *	,-------------------------------------------------------------------------.
 *	| ` ~ |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |9([) |0(]) |       | tap dance [ ]
 *	|-------------------------------------------------------------------------+
-*	|      |     |     |     |     |     |     |     |     |     |     |  \   |
+*	|      |     |     |     |     |     |     |  4  |     |     |     |  \   |
 *	|-------------------------------------------------------------------------+
 *	|       |     |     |     |     |     |     |     |     |     |     |     |
 *	|-------------------------------------------------------------------------+
 *	|     |  @  |     |  -  |  +   |          |       | Home| PgDn| PgUp| End |
 *	`-------------------------------------------------------------------------'
 */
-	[1] = LAYOUT(KC_GRV, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, TD(TD_LBRC), TD(TD_RBRC), KC_TRNS,
+	[2] = LAYOUT(KC_GRV, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, TD(TD_LBRC), TD(TD_RBRC), KC_TRNS,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_BSLS,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
 		KC_TRNS, KC_AT, KC_TRNS, KC_PMNS, KC_PPLS, KC_TRNS, KC_TRNS, KC_HOME, KC_PGDN, KC_PGUP, KC_END),
 /*
-*	Layer 2 '
+*	Layer 3 '
 *	,-------------------------------------------------------------------------.
 *	| ` ~ |(np)1|(np)2|(np)3|(np)4|  5  |  6  |  7  |  8  |9([) |0(]) |       | tap dance NumPad 1-4 [ ]
 *	|-------------------------------------------------------------------------+
@@ -100,15 +117,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-------------------------------------------------------------------------+
 *	|       | n9  | n0  |     |     |     |     |     |     |     |     |     |
 *	|-------------------------------------------------------------------------+
-*	|     |  @  |     |  -  |  +   |          |       |     |     |rCtl | Gui |
+*	|     |  @  |     |  -  |  +   |          |       |     | L1  |rCtl | Gui |
 *	`-------------------------------------------------------------------------'
 */
-	[2] = LAYOUT(KC_GRV, TD(TD_NP1), TD(TD_NP2), TD(TD_NP3), TD(TD_NP4), KC_5, KC_6, KC_7, KC_8, TD(TD_LBRC), TD(TD_RBRC), KC_TRNS,
+	[3] = LAYOUT(KC_GRV, TD(TD_NP1), TD(TD_NP2), TD(TD_NP3), TD(TD_NP4), KC_5, KC_6, KC_7, KC_8, TD(TD_LBRC), TD(TD_RBRC), KC_TRNS,
 		KC_TRNS, KC_P5, KC_P6, KC_P7, KC_P8, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
 		KC_TRNS, KC_P9, KC_P0, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-		KC_TRNS, KC_AT, KC_TRNS, KC_PMNS, KC_PPLS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_RCTL, KC_RGUI),
+		KC_TRNS, KC_AT, KC_TRNS, KC_PMNS, KC_PPLS, KC_TRNS, KC_TRNS, KC_TRNS, DF(1), KC_RCTL, KC_RGUI),
 /*
-*	Layer 3 Del
+*	Layer 4 Del
 *	,-------------------------------------------------------------------------.
 *	| Esc | F1  | F2  | F3  | F4  | F5  | F6  | F7  | F8  | F9  | F10 |PrtScr |
 *	|-------------------------------------------------------------------------+
@@ -119,7 +136,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|     |Pause|     |     |      |          |       |     |     |     |     |
 *	`-------------------------------------------------------------------------'
 */
-	[3] = LAYOUT(KC_ESC, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_PSCR,
+	[4] = LAYOUT(KC_ESC, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_PSCR,
 		TD(TD_CAPS), KC_F11, KC_F12, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, RGB_RMOD, RGB_MOD, KC_TRNS,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, RGB_VAD, RGB_VAI, RGB_TOG,
 		KC_TRNS, KC_PAUS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
