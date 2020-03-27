@@ -68,7 +68,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-------------------------------------------------------------------------+
 *	| Shift |  Z  |  X  |  C  |  V  |  B  |  N  |M(?) |,(?!)|.(!) |emote| Ent | combo (m+,)=! combo (,+.)=? tap dance emote ¯\_(ツ)_/¯, UwU
 *	|-------------------------------------------------------------------------+
-*	| Ctrl|  _  |=/Alt|  /  |   *  |   Space   |Del/L4| left|V(HO)|^(EN)|Right| tap dance down(home) up(end)
+*	| Ctrl|  _  |=/Alt|  /  |   *  |   Space   |Del/L4| left|v(HO)|^(EN)|Right| tap dance down(home) up(end)
 *	`-------------------------------------------------------------------------'
 */
 	[0] = LAYOUT(LCA_T(KC_ESC), KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC,
@@ -82,15 +82,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-------------------------------------------------------------------------+
 *	|Tab/L2|  F  |  A  |  S  |  D  |  G  |  H  |  J  |  K  |  L  |  ;  | '/L3 |
 *	|-------------------------------------------------------------------------+
-*	| Shift |  V  |  Z  |  X  |  C  |  B  |  N  |M(?) |,(?!)|.(!) |emote| Ent | combo (m+,)=! combo (,+.)=? tap dance emote ¯\_(ツ)_/¯, UwU
+*	| Shift |  V  |  Z  |  X  |  C  |  B  |  N  |M(?) |,(?!)|.(!) |emote| L0  | combo (m+,)=! combo (,+.)=? tap dance emote ¯\_(ツ)_/¯, UwU
 *	|-------------------------------------------------------------------------+
-*	| Ctrl|  _  |=/Alt|  /  |   *  |   Space   |Del/L4|     |     |     | L(0)|
+*	| Ctrl|  _  |=/Alt|  /  |   *  |   Space   |Del/L4| left|v(HO)|^(EN)|Right| tap dance down(home) up(end)
 *	`-------------------------------------------------------------------------'
 */
 	[1] = LAYOUT(LCA_T(KC_ESC), KC_Q, KC_PMNS, KC_W, KC_E, KC_R, KC_PPLS, KC_U, KC_I, KC_O, KC_P, KC_BSPC,
 		LT(2,KC_TAB), KC_F, KC_A, KC_S, KC_D, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, LT(3,KC_QUOT),
-		KC_LSFT, KC_V, KC_Z, KC_X, KC_C, KC_TAB, KC_N, KC_M, KC_B, KC_DOT, TD(TD_EMO1), KC_SFTENT,
-		KC_LCTL, KC_UNDS, LALT_T(KC_EQL), KC_PSLS, KC_PAST, KC_SPC, LT(4,KC_DEL), KC_TRNS, KC_TRNS, KC_TRNS, DF(0)),
+		KC_LSFT, KC_V, KC_Z, KC_X, KC_C, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, TD(TD_EMO1), DF(0),
+		KC_LCTL, KC_UNDS, LALT_T(KC_EQL), KC_PSLS, KC_PAST, KC_SPC, LT(4,KC_DEL), KC_LEFT, TD(TD_DHO), TD(TD_UEN), KC_RIGHT),
 
 /*
 *	Layer 2 tab
