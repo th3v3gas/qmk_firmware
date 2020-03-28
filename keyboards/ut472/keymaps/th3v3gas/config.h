@@ -21,6 +21,6 @@
 // place overrides here
 
 #define COMBO_COUNT 2
-#define TAPPING_TERM 170
+#define TAPPING_TERM 140
 #define COMBO_TERM 50
 #define UNICODE_KEY_WINC KC_RALT
