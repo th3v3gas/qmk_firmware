@@ -99,6 +99,8 @@ void td01_reset (qk_tap_dance_state_t *state, void *user_data) {
       layer_on(_GM);
       break;
     case DOUBLE_SINGLE_TAP:
+      layer_clear();
+      layer_move(_QW);
       unregister_code16(KC_LALT);
       unregister_code16(KC_LCTL);
       unregister_code16(KC_F);
@@ -117,7 +119,6 @@ void td02_finished (qk_tap_dance_state_t *state, void *user_date) {
       break;
     case DOUBLE_SINGLE_TAP: //_CHAT win
       layer_move(_QW);
-      layer_on(_CH);
   }
 }
 void td02_reset (qk_tap_dance_state_t *state, void *user_data) {
@@ -131,6 +132,7 @@ void td02_reset (qk_tap_dance_state_t *state, void *user_data) {
       break;
     case DOUBLE_SINGLE_TAP:
       register_code16(KC_LGUI);
+      _delay_ms(10);
       unregister_code16(KC_LGUI);
   }
 }
@@ -160,123 +162,120 @@ void td03_reset (qk_tap_dance_state_t *state, void *user_data) {
       unregister_code16(KC_LGUI);
   }
 }
-//TD esc, _GAMR esc (ref:TD_CHESC)
+//TD _GAME esc, esc (ref:TD_CHESC)
 void td04_finished (qk_tap_dance_state_t *state, void *user_date) {
   td_state = cur_dance(state);
   switch (td_state) {
-    case SINGLE_TAP: //esc
+    case SINGLE_TAP: //_GAME esc
       register_code16(KC_ESC);
-      unregister_code16(KC_ESC);
       break;
-    case SINGLE_HOLD: //_GAME esc
-      register_code16(KC_ESC);
+    case SINGLE_HOLD: //esc
       unregister_code16(KC_ESC);
       break;
     case DOUBLE_SINGLE_TAP:
-      register_code16(KC_ESC);
       unregister_code16(KC_ESC);
-      register_code16(KC_ESC);
   }
 }
 void td04_reset (qk_tap_dance_state_t *state, void *user_data) {
   switch (td_state) {
     case SINGLE_TAP:
+      unregister_code16(KC_ESC);
       layer_move(_QW);
       layer_on(_GM);
       break;
     case SINGLE_HOLD:
+      register_code16(KC_ESC);
+      _delay_ms(10);
       unregister_code16(KC_ESC);
       break;
     case DOUBLE_SINGLE_TAP:
       unregister_code16(KC_ESC);
   }
 }
-//TD enter, _GAME enter (ref:TD_CHENT)
+//TD _GAME enter, enter (ref:TD_CHENT)
 void td05_finished (qk_tap_dance_state_t *state, void *user_date) {
   td_state = cur_dance(state);
   switch (td_state) {
-    case SINGLE_TAP: //enter
+    case SINGLE_TAP: //_GAME enter
       register_code16(KC_ENT);
-      unregister_code16(KC_ENT);
       break;
-    case SINGLE_HOLD: //_GAME enter
-      register_code16(KC_ENT);
+    case SINGLE_HOLD: //enter
       unregister_code16(KC_ENT);
       break;
     case DOUBLE_SINGLE_TAP:
-      register_code16(KC_ENT);
       unregister_code16(KC_ENT);
-      register_code16(KC_ENT);
   }
 }
 void td05_reset (qk_tap_dance_state_t *state, void *user_data) {
   switch (td_state) {
     case SINGLE_TAP:
+      unregister_code16(KC_ENT);
       layer_move(_QW);
       layer_on(_GM);
       break;
     case SINGLE_HOLD:
+      register_code16(KC_ENT);
+      _delay_ms(10);
       unregister_code16(KC_ENT);
       break;
     case DOUBLE_SINGLE_TAP:
       unregister_code16(KC_ENT);
   }
 }
-//TD J, _CHAT Y, (ref:TD_CHJ)
+//_CHAT Y, J (ref:TD_CHJ)
 void td06_finished (qk_tap_dance_state_t *state, void *user_date) {
   td_state = cur_dance(state);
   switch (td_state) {
     case SINGLE_TAP: //_CHAT Y
       register_code16(KC_Y);
-      unregister_code16(KC_Y);
       break;
     case SINGLE_HOLD: //J
       register_code16(KC_J);
       break;
     case DOUBLE_SINGLE_TAP: //J
-      register_code16(KC_J);
       unregister_code16(KC_J);
-      register_code16(KC_J);
   }
 }
 void td06_reset (qk_tap_dance_state_t *state, void *user_data) {
   switch (td_state) {
     case SINGLE_TAP:
+      unregister_code16(KC_Y);
       layer_move(_QW);
       layer_on(_CH);
       break;
     case SINGLE_HOLD:
+      unregister_code16(KC_J);
+      _delay_ms(10);
       unregister_code16(KC_J);
       break;
     case DOUBLE_SINGLE_TAP:
       unregister_code16(KC_J);
   }
 }
-//TD J, K _CHAT, (ref:TD_CHK)
+//TD K _CHAT, K(ref:TD_CHK)
 void td09_finished (qk_tap_dance_state_t *state, void *user_date) {
   td_state = cur_dance(state);
   switch (td_state) {
     case SINGLE_TAP: //K
       register_code16(KC_K);
-      unregister_code16(KC_K);
       break;
     case SINGLE_HOLD: //_CHAT Y
-      register_code16(KC_K);
-      unregister_code16(KC_K);
+      unregister_code16(KC_J);
       break;
     case DOUBLE_SINGLE_TAP: //J
-      register_code16(KC_K);
       unregister_code16(KC_K);
-      register_code16(KC_K);
   }
 }
 void td09_reset (qk_tap_dance_state_t *state, void *user_data) {
   switch (td_state) {
     case SINGLE_TAP:
+      unregister_code16(KC_K);
       layer_move(_QW);
       layer_on(_CH);
       break;
     case SINGLE_HOLD:
+      register_code16(KC_K);
+      _delay_ms(10);
       unregister_code16(KC_K);
       break;
     case DOUBLE_SINGLE_TAP:
@@ -309,7 +308,7 @@ void td07_reset (qk_tap_dance_state_t *state, void *user_data) {
       unregister_code16(KC_F13);
   }
 }
-//TD plus, discord (ref:TD_GMDIS)
+//TD plus, _CHAT discord (ref:TD_GMDIS)
 void td08_finished (qk_tap_dance_state_t *state, void *user_date) {
   td_state = cur_dance(state);
   switch (td_state) {
@@ -319,9 +318,7 @@ void td08_finished (qk_tap_dance_state_t *state, void *user_date) {
     case SINGLE_HOLD: //plus
       register_code16(KC_PAST);
       break;
-    case DOUBLE_SINGLE_TAP: //discord
-      layer_move(_QW);
-      layer_on(_CH);
+    case DOUBLE_SINGLE_TAP: //_CHAT discord
       register_code16(KC_F13);
   }
 }
@@ -334,6 +331,8 @@ void td08_reset (qk_tap_dance_state_t *state, void *user_data) {
       unregister_code16(KC_PAST);
       break;
     case DOUBLE_SINGLE_TAP:
+      layer_move(_QW);
+      layer_on(_CH);
       unregister_code16(KC_F13);
   }
 }
@@ -424,7 +423,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
 	[_THUMB] = LAYOUT(KC_GRV, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_DEL,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, KC_TRNS, KC_BSLS,
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_SLSH, KC_TRNS,
+		KC_TRNS, RGB_MOD, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_SLSH, KC_TRNS,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_AT, KC_LBRC, KC_UNDS, KC_RBRC, KC_EQL, KC_TRNS, KC_TRNS, KC_TRNS),
 
 /* _FUNCTION _FN
@@ -435,13 +434,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-------------------------------------------------------------------------+
 *	|       |pause|     |     |     |     | n6  | n7  | n8  | n9  | n0  | rgb |
 *	|-------------------------------------------------------------------------+
-*	|     |     |     | n1  |  n2  |    n3     |      |     |     |     |     |
+*	|     |     |     | n1  |  n2  |    n3     |      | rgb |     |     |     |
 *	`-------------------------------------------------------------------------'
 */
 	[_FUNCTION] = LAYOUT(C(S(KC_ESC)), KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_TRNS,
 		TD(TD_CAPS), KC_F11, KC_F12, KC_TRNS, KC_TRNS, KC_TRNS, KC_P1, KC_P2, KC_P3, KC_P4, KC_P5, KC_PSCR,
-		KC_TRNS, KC_BRK, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_P6, KC_P7, KC_P8, KC_P9, KC_P0, RGB_TOG,
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_P1, KC_P2, KC_P3, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_P6, KC_P7, KC_P8, KC_P9, KC_P0, RGB_TOG,
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_P1, KC_P2, KC_P3, KC_TRNS, RGB_MOD, KC_TRNS, KC_TRNS, KC_TRNS),
 
 /* _CHAT _CH
 *	,-------------------------------------------------------------------------.

@@ -23,5 +23,8 @@
 #define COMBO_COUNT 2
 #define TAPPING_TERM 140
 #define COMBO_TERM 50
-//#define RGBLIGHT_LAYERS
+#define RGBLIGHT_SLEEP
+#define RGBLIGHT_LAYERS
+#define RGBLED_NUM 8
+#define RGBLIGHT_LED_MAP {6, 7, 0, 1, 2, 3, 4, 5}
 //#define UNICODE_KEY_WINC KC_RALT
