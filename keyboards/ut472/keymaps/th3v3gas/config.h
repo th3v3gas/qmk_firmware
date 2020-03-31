@@ -21,6 +21,7 @@
 // place overrides here
 
 #define COMBO_COUNT 2
-#define TAPPING_TERM 150
+#define TAPPING_TERM 140
 #define COMBO_TERM 50
+//#define RGBLIGHT_LAYERS
 //#define UNICODE_KEY_WINC KC_RALT
