@@ -1,4 +1,7 @@
 #include QMK_KEYBOARD_H
+
+extern uint8_t is_master;
+
 /*
 //unicode WinCompose
 //<https://github.com/samhocevar/wincompose>
@@ -26,19 +29,18 @@ enum layers_keymap {
 #define _CH _CHAT
 
 enum custom_keycodes {
-  TD_F1F11,
+  TD_F1F11, //double tap
   TD_F2F12,
   TD_CAPS,
   TD_QGWOX,
   TD_FNWIN,
   TD_CHENT,
-  TD_PLDIS,
-  TD_GMDIS,
-  M_DSCRD = SAFE_RANGE, //macro
-  M_CHESC,
+  M_CHESC = SAFE_RANGE, //macro
   M_GCHAL,
   M_GCHTM,
   M_GCHAT,
+  M_DSCRD,
+  M_DSCEXT,
 };
 
 //tap dance
@@ -57,10 +59,6 @@ void td03_finished (qk_tap_dance_state_t *state, void *user_data); //(ref:TD_FNW
 void td03_reset (qk_tap_dance_state_t *state, void *user_data);
 void td05_finished (qk_tap_dance_state_t *state, void *user_data); //(ref:TD_CHENT)
 void td05_reset (qk_tap_dance_state_t *state, void *user_data);
-void td07_finished (qk_tap_dance_state_t *state, void *user_data); //(ref:TD_PLDIS)
-void td07_reset (qk_tap_dance_state_t *state, void *user_data);
-void td08_finished (qk_tap_dance_state_t *state, void *user_data); //(ref:TD_GMDIS)
-void td08_reset (qk_tap_dance_state_t *state, void *user_data);
 int cur_dance (qk_tap_dance_state_t *state) {
   if (state->count == 1) {
     if (state->interrupted || !state->pressed) { return SINGLE_TAP; }
@@ -159,62 +157,6 @@ void td05_reset (qk_tap_dance_state_t *state, void *user_data) {
       NULL;
   }
 }
-//TD plus; discord (ref:TD_PLDIS)
-void td07_finished (qk_tap_dance_state_t *state, void *user_date) {
-  td_state = cur_dance(state);
-  switch (td_state) {
-    case SINGLE_TAP: //plus
-      register_code16(KC_PPLS);
-      break;
-    case SINGLE_HOLD: //plus
-      register_code16(KC_PPLS);
-      break;
-    case DOUBLE_SINGLE_TAP: //discord
-      register_code16(KC_F17);
-      unregister_code16(KC_F17);
-  }
-}
-void td07_reset (qk_tap_dance_state_t *state, void *user_data) {
-  switch (td_state) {
-    case SINGLE_TAP:
-      unregister_code16(KC_PPLS);
-      break;
-    case SINGLE_HOLD:
-      unregister_code16(KC_PPLS);
-      break;
-    case DOUBLE_SINGLE_TAP:
-      NULL;
-  }
-}
-//TD right; _CHAT, discord (ref:TD_GMDIS)
-void td08_finished (qk_tap_dance_state_t *state, void *user_date) {
-  td_state = cur_dance(state);
-  switch (td_state) {
-    case SINGLE_TAP: //right
-      register_code16(KC_RGHT);
-      break;
-    case SINGLE_HOLD: //right
-      register_code16(KC_RGHT);
-      break;
-    case DOUBLE_SINGLE_TAP: //_CHAT discord
-      layer_move(_QW);
-      layer_on(_CH);
-      register_code16(KC_F17);
-      unregister_code16(KC_F17);
-  }
-}
-void td08_reset (qk_tap_dance_state_t *state, void *user_data) {
-  switch (td_state) {
-    case SINGLE_TAP:
-      unregister_code16(KC_RGHT);
-      break;
-    case SINGLE_HOLD:
-      unregister_code16(KC_RGHT);
-      break;
-    case DOUBLE_SINGLE_TAP:
-      NULL;
-  }
-}
 qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_F1F11] = ACTION_TAP_DANCE_DOUBLE(KC_F1, KC_F11),
   [TD_F2F12] = ACTION_TAP_DANCE_DOUBLE(KC_F2, KC_F12),
@@ -222,18 +164,11 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_QGWOX] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td01_finished, td01_reset),
   [TD_FNWIN] = ACTION_TAP_DANCE_FN_ADVANCED_TIME (NULL, td03_finished, td03_reset, 160),
   [TD_CHENT] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, td05_finished, td05_reset, 170),
-  [TD_PLDIS] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, td07_finished, td07_reset, 160),
-  [TD_GMDIS] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, td08_finished, td08_reset, 160),
 };
 
 //macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
-		case M_DSCRD: //_GAME Discord
-			if (record->event.pressed) {
-        send_string(SS_TAP(X_F17));
-			};
-      return false;
 		case M_CHESC: //_GAME ESC
 			if (record->event.pressed) {
         layer_move(_GM);
@@ -260,6 +195,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         layer_on(_CH);
 			};
       return false;
+		case M_DSCRD: //_CHAT discord
+			if (record->event.pressed) {
+        layer_move(_QW);
+        layer_on(_CH);
+        send_string(SS_TAP(X_F17));
+			};
+      return false;
+		case M_DSCEXT: //_GAME exit discord
+			if (record->event.pressed) {
+        layer_move(_QW);
+        layer_on(_GM);
+        send_string(SS_TAP(X_F17));
+			};
+      return false;
   }
   return true;
 };
@@ -280,95 +229,160 @@ combo_t key_combos[COMBO_COUNT] = {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* _QW _QWERTY      DEFAULT LAYER
-*	,-------------------------------------------------------------------------.
-*	|esCTL|  Q  |  W  |  E  |  R  |  T  |  Y  |  U  |  I  |  O  |  P  |Bspace |
-*	|-------------------------------------------------------------------------+
-*	|tab_FN|  A  |  S  |  D  |  F  |  G  |  H  |  J  |  K  |  L  |  ;  |FNWIN | tap dance FNWIN
-*	|-------------------------------------------------------------------------+
-*	| shift |  Z  |  X  |  C  |  V  |  B  |  N  |M(!) |,(!?)|.(?) |QGWOX|SFTEN| combos (M+,)=! (,+.)=?; tap dance QGWOX
-*	|-------------------------------------------------------------------------+
-*	|     |     |     |alt -|/ _TH |   space   |* _TH |PLDIS|     |     |     | tap dance PLDIS
-*	`-------------------------------------------------------------------------'
+*	+-----------------------------------+  +-----------------------------------.
+*	|esCTL|  Q  |  W  |  E  |  R  |  T  |  |  Y  |  U  |  I  |  O  |  P  |Bspce|
+*	|-----------------------------------|  |-----------------------------------+
+*	|tab_F|  A  |  S  |  D  |  F  |  G  |  |  H  |  J  |  K  |  L  |  ;  |FNWIN|  tap dance FNWIN
+*	|-----------------------------------|  |-----------------------------------+
+*	|shift|  Z  |  X  |  C  |  V  |  B  |  |  N  |M(!) |,(!?)|.(?) |QGWOX|SFTEN|  combos (M+,)=! (,+.)=?; tap dance QGWOX
+*	+-----------------------------------|  |-----------------------------------+
+*	                  |alt -|/ _TH|space|  | del |* _TH|PLDIS|                    tap dance PLDIS
+*	                  +-----------------+  +-----------------+
 */
-	[_QWERTY] = LAYOUT(CTL_T(KC_ESC),KC_Q,KC_W,KC_E,KC_R,KC_T,KC_Y,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
-		LT(_FN,KC_TAB),KC_A,KC_S,KC_D,KC_F,KC_G,KC_H,KC_J,KC_K,KC_L,KC_SCLN,TD(TD_FNWIN),
-		KC_LSFT,KC_Z,KC_X,KC_C,KC_V,KC_B,KC_N,KC_M,KC_COMM,KC_DOT,TD(TD_QGWOX),KC_SFTENT,
-		LALT_T(KC_MINS),LT(_TH,KC_SLSH),KC_SPC,KC_SPC,LT(_TH,KC_PAST),TD(TD_PLDIS)),
+	[_QWERTY] = LAYOUT(
+     CTL_T(KC_ESC),KC_Q,KC_W,KC_E,KC_R,KC_T,  KC_Y,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
+		LT(_FN,KC_TAB),KC_A,KC_S,KC_D,KC_F,KC_G,  KC_H,KC_J,KC_K,KC_L,KC_SCLN,TD(TD_FNWIN),
+		       KC_LSFT,KC_Z,KC_X,KC_C,KC_V,KC_B,  KC_N,KC_M,KC_COMM,KC_DOT,TD(TD_QGWOX),KC_SFTENT,
+		 LALT_T(KC_MINS),LT(_TH,KC_SLSH),KC_SPC,  KC_SPC,LT(_TH,KC_PAST),KC_PPLS),
 
 /* _GM _GAME        DEFAULT LAYER
-*	,-------------------------------------------------------------------------.
-*	| esc |  T  |  Q  |  W  |  E  |  R  |  J  |  U  |  I  |  O  |  P  |Bspace |
-*	|-------------------------------------------------------------------------+
-*	|tb_GFN|  G  |  A  |  S  |  D  |  F  |  H  |GCHAL|GCHTM|GCHAT|  ;  |FNWIN | macro GCHAL, GCHTM, GCHAT; tap dance FNWIN
-*	|-------------------------------------------------------------------------+
-*	| shift |  B  |  Z  |  X  |  C  |  V  |  N  |  M  |  ,  |  .  |QGWOX|SFTEN|
-*	|-------------------------------------------------------------------------+
-*	|     |     |     |  -  |  /  |   space   |* _TH |GMDIS|     |     |     | tap dance GMDIS
-*	`-------------------------------------------------------------------------'
+*	+-----------------------------------+  +-----------------------------------+
+*	| esc |  T  |  Q  |  W  |  E  |  R  |  |  J  |  U  |  I  |  O  |  P  |Bspce|
+*	|-----------------------------------|  |-----------------------------------+
+*	|tb_GF|  G  |  A  |  S  |  D  |  F  |  |  H  |GCHAL|GCHTM|GCHAT|  ;  |FNWIN|  macro GCHAL, GCHTM, GCHAT; tap dance FNWIN
+*	|-----------------------------------|  |-----------------------------------+
+*	|shift|  B  |  Z  |  X  |  C  |  V  |  |  N  |  M  |  ,  |  .  |QGWOX|SFTEN|
+*	+-----------------------------------|  |-----------------------------------+
+*	                  |  -  |  /  |space|  | del |* _TH|DSCRD|                    macro DSCRD
+*	                  +-----------------+  +-----------------+
 */
-	[_GAME] = LAYOUT(KC_ESC,KC_T,KC_Q,KC_W,KC_E,KC_R,KC_J,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
-    MO(_GFN),KC_G,KC_A,KC_S,KC_D,KC_F,KC_H,M_GCHAL,M_GCHTM,M_GCHAT,KC_SCLN,TD(TD_FNWIN),
-    KC_LSFT,KC_B,KC_Z,KC_X,KC_C,KC_V,KC_N,KC_M,KC_COMM,KC_DOT,TD(TD_QGWOX),KC_SFTENT,
-    KC_LBRC,KC_RBRC,KC_SPC,KC_SPC,LT(_TH,KC_LEFT),TD(TD_GMDIS)),
+	[_GAME] = LAYOUT(
+      KC_ESC,KC_T,KC_Q,KC_W,KC_E,KC_R,  KC_J,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
+    MO(_GFN),KC_G,KC_A,KC_S,KC_D,KC_F,  KC_H,M_GCHAL,M_GCHTM,M_GCHAT,KC_SCLN,TD(TD_FNWIN),
+     KC_LSFT,KC_B,KC_Z,KC_X,KC_C,KC_V,  KC_N,KC_M,KC_COMM,KC_DOT,TD(TD_QGWOX),KC_SFTENT,
+               KC_LBRC,KC_RBRC,KC_SPC,  KC_DEL,LT(_TH,KC_LEFT),M_DSCRD),
 
 /* _TH _THUMB
-*	,-------------------------------------------------------------------------.
-*	| ` ~ |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  0  |DELETE |
-*	|-------------------------------------------------------------------------+
-*	|      |     |     |     |     |     |left |down | up  |right|     |  \|  |
-*	|-------------------------------------------------------------------------+
-*	|       |undo | cut |copy |paste|     |     |     |     |     |     |     |
-*	|-------------------------------------------------------------------------+
-*	|     |     |     |  @  |  [   |     _     |  ]   |  =  |     |     |     |
-*	`-------------------------------------------------------------------------'
+*	+-----------------------------------+  +-----------------------------------+
+*	| ` ~ |  1  |  2  |  3  |  4  |  5  |  |  6  |  7  |  8  |  9  |  0  |     |
+*	|-----------------------------------|  |-----------------------------------+
+*	|     |     |     |     |     |     |  |left |down | up  |right|     |  \| |
+*	|-----------------------------------|  |-----------------------------------+
+*	|     |undo | cut |copy |paste|     |  |     |     |     |     |     |     |
+*	+-----------------------------------|  |-----------------------------------+
+*	                  |  @  |  [  |  _  |  | del |  ]  |  =  |
+*	                  +-----------------+  +-----------------+
 */
-	[_THUMB] = LAYOUT(KC_GRV,KC_1,KC_2,KC_3,KC_4,KC_5,KC_6,KC_7,KC_8,KC_9,KC_0,KC_DEL,
-		_______,_______,_______,_______,_______,XXXXXXX,KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,_______,KC_BSLS,
-		_______,C(KC_Z),C(KC_X),C(KC_C),C(KC_V),_______,_______,_______,_______,_______,TD(TD_QGWOX),_______,
-		KC_AT,KC_LBRC,KC_UNDS,KC_UNDS,KC_RBRC,KC_EQL),
+	[_THUMB] = LAYOUT(
+                    KC_GRV,KC_1,KC_2,KC_3,KC_4,KC_5,  KC_6,KC_7,KC_8,KC_9,KC_0,_______,
+		_______,_______,_______,_______,_______,_______,  KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,_______,KC_BSLS,
+		_______,C(KC_Z),C(KC_X),C(KC_C),C(KC_V),_______,  _______,_______,_______,_______,TD(TD_QGWOX),_______,
+		                          KC_AT,KC_LBRC,KC_UNDS,  KC_DEL,KC_RBRC,KC_EQL),
 
 /* _FN _FUNCTION
-*	,-------------------------------------------------------------------------.
-*	|(tsk)|F1F11|F2F12| F3  | F4  | F5  | F6  | F7  | F8  | F9  | F10 |PrtScr | (tsk) = task manager; tap dance F1F11, F2F12
-*	|-------------------------------------------------------------------------+
-*	| CAPS | n1  | n2  | n3  | n4  | n5  | n6  | n7  | n8  | n9  | n0  |      | tap dance TD_CAPS
-*	|-------------------------------------------------------------------------+
-*	|       |     |     |     |     |     |home |pgup |pgdn | end |     |rsft |
-*	|-------------------------------------------------------------------------+
-*	|     |     |     |  @  |  [   |     _     |  ]   |  =  |     |     |     |
-*	`-------------------------------------------------------------------------'
+*	+-----------------------------------+  +-----------------------------------+
+*	|(tsk)|F1F11|F2F12| F3  | F4  | F5  |  | F6  | F7  | F8  | F9  | F10 |PrtSc|  (tsk) = task manager; tap dance F1F11, F2F12
+*	|-----------------------------------|  |-----------------------------------+
+*	|CAPS | n1  | n2  | n3  | n4  | n5  |  | n6  | n7  | n8  | n9  | n0  |     |  tap dance TD_CAPS
+*	|-----------------------------------|  |-----------------------------------+
+*	|     |     |     |     |     |     |  |home |pgup |pgdn | end |     |rsft |
+*	+-----------------------------------|  |-----------------------------------+
+*	                  |  @  |  [  |  _  |  |  _  |  ]  |  =  |
+*	                  +-----------------+  +-----------------+
 */
-	[_FUNCTION] = LAYOUT(C(S(KC_ESC)),TD(TD_F1F11),TD(TD_F2F12),KC_F3,KC_F4,KC_F5,KC_F6,KC_F7,KC_F8,KC_F9,KC_F10,KC_PSCR,
-		TD(TD_CAPS),KC_P1,KC_P2,KC_P3,KC_P4,KC_P5,KC_P6,KC_P7,KC_P8,KC_P9,KC_P0,_______,
-		_______,_______,_______,_______,_______,_______,KC_HOME,KC_PGDN,KC_PGUP, KC_END,TD(TD_QGWOX),KC_RSFT,
-		KC_AT,KC_LBRC,KC_UNDS,KC_UNDS,KC_RBRC,KC_EQL),
-
-/*    mouse reserved
-    |___| 5 | 6 | scrl|
-    | 3 |pdn| 4 | f7  |
-    | 1 |pup| 2 | f8  |   */
+	[_FUNCTION] = LAYOUT(
+    C(S(KC_ESC)),TD(TD_F1F11),TD(TD_F2F12),KC_F3,KC_F4,KC_F5,  KC_F6,KC_F7,KC_F8,KC_F9,KC_F10,KC_PSCR,
+		               TD(TD_CAPS),KC_P1,KC_P2,KC_P3,KC_P4,KC_P5,  KC_P6,KC_P7,KC_P8,KC_P9,KC_P0,_______,
+		         _______,_______,_______,_______,_______,_______,  KC_HOME,KC_PGDN,KC_PGUP, KC_END,TD(TD_QGWOX),KC_RSFT,
+		                                   KC_AT,KC_LBRC,KC_UNDS,  KC_UNDS,KC_RBRC,KC_EQL),
 
 /* _GFN _GAME_FUNCTION
-*	,-------------------------------------------------------------------------.
-*	| del |  f1  |  7  |  8  |  9  | f4  |  Y  |     |     |     |     |       |
-*	|-------------------------------------------------------------------------+
-*	|      | f2  |  4  |  5  |  6  | f5  |     |  J  |  K  |  L  |     |      |
-*	|------------------------------------------------------------------------+
-*	|  tab  | f3  |  1  |  2  |  3  | f6  |     |     |     |     |     |     |
-*	|-------------------------------------------------------------------------+
-*	| ctl |     |     | n/  |   0  |    n*     | F11  | F12 |     |     |     |
-*	`-------------------------------------------------------------------------'
+*	+-----------------------------------+  +-----------------------------------+
+*	| del | f1  |  7  |  8  |  9  | f4  |  |  Y  |     |     |     |     |     |
+*	|-----------------------------------|  |-----------------------------------+
+*	|     | f2  |  4  |  5  |  6  | f5  |  | F11 |  J  |  K  |  L  |     |     |
+*	|-----------------------------------|  |-----------------------------------+
+*	| tab | f3  |  1  |  2  |  3  | f6  |  | F12 |     |     |     |     |     |
+*	+-----------------------------------|  |-----------------------------------+
+*	                  | n/  |   0 |  _  |  |space|     |     |
+*	                  +-----------------+  +-----------------+
 */
 	[_GAME_FUNCTION] = LAYOUT(
-     KC_DEL,  KC_F1,   KC_7,   KC_8,   KC_9,  KC_F4,   KC_Y,_______,_______,_______,_______,_______,
-    _______,  KC_F2,   KC_4,   KC_5,   KC_6,  KC_F5,KC_PPLS,   KC_J,   KC_K,   KC_L,_______,_______,
-     KC_TAB,  KC_F3,   KC_1,   KC_2,   KC_3,  KC_F6,KC_PMNS,_______,_______,_______,TD(TD_QGWOX),_______,
-   KC_PSLS,   KC_0,KC_PAST,KC_PAST, KC_F11, KC_F12),
+    KC_DEL,KC_F1,KC_7,KC_8,KC_9,KC_F4,  KC_Y,_______,_______,_______,_______,_______,
+   _______,KC_F2,KC_4,KC_5,KC_6,KC_F5,  KC_F12,KC_J,KC_K,KC_L,_______,_______,
+    KC_TAB,KC_F3,KC_1,KC_2,KC_3,KC_F6,  KC_F11,_______,_______,_______,TD(TD_QGWOX),_______,
+                 KC_PSLS,KC_0,KC_PAST,  KC_SPC,_______,_______),
 
 // _CH _CHAT
 	[_CHAT] = LAYOUT(
     M_CHESC,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,
 		_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,
 		_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,TD(TD_QGWOX),TD(TD_CHENT),
-		_______,_______,_______,_______,_______,M_DSCRD),
+		_______,_______,_______,_______,_______,M_DSCEXT),
 };
+#ifdef OLED_DRIVER_ENABLE
+//static uint32_t oled_timer = 0;
+void render_default_layer_state(void) {
+    oled_write("Layer:", false);
+    switch (get_highest_layer(layer_state)) {
+        case _QW:
+            oled_write_P(PSTR("_QWERTY\n"), false);
+            break;
+        case _GM:
+            oled_write_P(PSTR("_GAME\n"), false);
+            break;
+        case _TH:
+            oled_write_P(PSTR("_THUMB\n"), false);
+            break;
+        case _FN:
+            oled_write_P(PSTR("_FUNCTION\n"), false);
+            break;
+        case _GFN:
+            oled_write_P(PSTR("_GAME_FUNCTION\n"), false);
+            break;
+        case _CH:
+            oled_write_P(PSTR("_CHAT\n"), false);
+            break;
+    }
+}
+void render_keylock_status(uint8_t led_usb_state) {
+    oled_write_P(PSTR("Lock:"), false);
+    oled_write_P(PSTR(" NUM "), led_usb_state & (1 << USB_LED_NUM_LOCK));
+    oled_write_P(PSTR(" CAPS "), led_usb_state & (1 << USB_LED_CAPS_LOCK));
+    oled_write_P(PSTR("     "), false);
+}
+void render_mod_status(uint8_t modifiers) {
+    oled_write_P(PSTR("Mods:"), false);
+    oled_write_P(PSTR(" S "), (modifiers & MOD_MASK_SHIFT));
+    oled_write_P(PSTR(" C "), (modifiers & MOD_MASK_CTRL));
+    oled_write_P(PSTR(" A "), (modifiers & MOD_MASK_ALT));
+    oled_write_P(PSTR(" W "), (modifiers & MOD_MASK_GUI));
+    oled_write_P(PSTR("    "), false);
+}
+void render_status_main(void) {
+    render_default_layer_state();
+    render_keylock_status(host_keyboard_leds());
+    render_mod_status(get_mods() | get_oneshot_mods());
+}
+void render_status_secondary(void) {
+    oled_write("Bite me.", false);
+}
+void oled_task_user(void) {
+/*
+    if (timer_elapsed32(oled_timer) > 30000) {
+        oled_off();
+        return;
+    }
+#    ifndef SPLIT_KEYBOARD
+    else {
+        oled_on();
+    }
+#    endif
+*/
+    if (is_master) {
+        render_status_main();
+    } else {
+        render_status_secondary();
+    }
+}
+#endif
