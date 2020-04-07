@@ -320,8 +320,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,TD(TD_QGWOX),TD(TD_CHENT),
 		_______,_______,_______,_______,_______,M_DSCEXT),
 };
+
+
+
 #ifdef OLED_DRIVER_ENABLE
-//static uint32_t oled_timer = 0;
+char keylog_str[5] = {};
+uint16_t oled_timer;
+uint16_t log_timer = 0;
+void update_log(void) {
+    if (timer_elapsed(log_timer) > 750) {
+        //add_keylog(0);
+    }
+}
+bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
+    if (record->event.pressed) {
+        //add_keylog(keycode);
+        oled_timer = timer_read();
+    }
+    return true;
+}
 void render_default_layer_state(void) {
     oled_write("Layer:", false);
     switch (get_highest_layer(layer_state)) {
@@ -368,17 +385,10 @@ void render_status_secondary(void) {
     oled_write("Bite me.", false);
 }
 void oled_task_user(void) {
-/*
-    if (timer_elapsed32(oled_timer) > 30000) {
+    if (timer_elapsed(oled_timer) > 60000) {
         oled_off();
         return;
     }
-#    ifndef SPLIT_KEYBOARD
-    else {
-        oled_on();
-    }
-#    endif
-*/
     if (is_master) {
         render_status_main();
     } else {
