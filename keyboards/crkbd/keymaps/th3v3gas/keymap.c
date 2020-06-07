@@ -280,8 +280,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
 		case M_BLWOX: //borderlands wox
 			if (record->event.pressed) {
-      layer_clear();
       layer_move(_QW);
+      layer_on(_CH);
       register_code16(KC_LALT);
       register_code16(KC_LCTL);
       register_code16(KC_MINS);
@@ -312,20 +312,20 @@ combo_t key_combos[COMBO_COUNT] = {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* _QW _QWERTY      BASE LAYER
 *	+-----------------------------------+  +-----------------------------------.
-*	|esCTL|  Q  |  W  |  E  |  R  |  T  |  |  Y  |  U  |  I  |  O  |  P  |Bspce|
+*	|escAL|  Q  |  W  |  E  |  R  |  T  |  |  Y  |  U  |  I  |  O  |  P  |Bspce|
 *	|-----------------------------------|  |-----------------------------------+
 *	|tab_F|  A  |  S  |  D  |  F  |  G  |  |  H  |  J  |  K  |  L  |  ;  |FNWIN|  tap dance FNWIN
 *	|-----------------------------------|  |-----------------------------------+
 *	|shift|  Z  |  X  |  C  |  V  |  B  |  |  N  |M(!) |,(!?)|.(?) |QGWOX|SFTEN|  combos (M+,)=! (,+.)=?; tap dance QGWOX
 *	+-----------------------------------|  |-----------------------------------+
-*	                  |alt *|_TH /| del |  |space|_TH [|RPRN |                    tap dance RPRN
+*	                  |ctl *|_TH /| del |  |space|_TH [|RPRN |                    tap dance RPRN
 *	                  +-----------------+  +-----------------+
 */
 	[_QWERTY] = LAYOUT(
-     CTL_T(KC_ESC),KC_Q,KC_W,KC_E,KC_R,KC_T,  KC_Y,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
+            KC_ESC,KC_Q,KC_W,KC_E,KC_R,KC_T,  KC_Y,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
 		LT(_FN,KC_TAB),KC_A,KC_S,KC_D,KC_F,KC_G,  KC_H,KC_J,KC_K,KC_L,KC_SCLN,TD(TD_FNWIN),
 		       KC_LSFT,KC_Z,KC_X,KC_C,KC_V,KC_B,  KC_N,KC_M,KC_COMM,KC_DOT,TD(TD_QGWOX),KC_SFTENT,
-		 LALT_T(KC_PAST),LT(_TH,KC_SLSH),KC_DEL,  KC_SPC,LT(_TH,KC_LBRC),KC_RBRC),
+		  CTL_T(KC_PAST),LT(_TH,KC_SLSH),KC_DEL,  KC_SPC,LT(_TH,KC_LBRC),LALT_T(KC_RBRC)),
 
 /* _TH _THUMB
 *	+-----------------------------------+  +-----------------------------------+
@@ -340,7 +340,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
 	[_THUMB] = LAYOUT(
                     KC_GRV,KC_1,KC_2,KC_3,KC_4,KC_5,  KC_6,KC_7,KC_8,KC_9,KC_0,_______,
-		_______,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,XXXXXXX,KC_TRNS,
+		_______,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,XXXXXXX,KC_BSLS,
 		_______,XXXXXXX,XXXXXXX,C(KC_C),C(KC_V),XXXXXXX,  KC_HOME,KC_PGDN,KC_PGUP,KC_END,KC_TRNS,_______,
 		                        KC_PPLS,KC_MINS,KC_UNDS,  KC_UNDS,KC_LPRN,KC_RPRN),
 
@@ -358,7 +358,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_FUNCTION] = LAYOUT(
     C(S(KC_ESC)),TD(TD_F1F11),TD(TD_F2F12),KC_F3,KC_F4,KC_F5,  KC_F6,KC_F7,KC_F8,KC_F9,KC_F10,KC_PSCR,
 		               TD(TD_CAPS),KC_P1,KC_P2,KC_P3,KC_P4,KC_P5,  KC_P6,KC_P7,KC_P8,KC_P9,KC_P0,M_EDT,
-		         _______,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,KC_TRNS,KC_RSFT,
+		         _______,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,KC_F16,KC_TRNS,KC_RSFT,
 		                                    KC_AT,KC_EQL,KC_UNDS,  KC_UNDS,_______,_______),
 
 /* _EDT _EDIT
@@ -421,8 +421,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_BLNDS] = LAYOUT( //borderlands
     _______,_______,_______,M_BLRUN,_______,_______,  KC_J,_______,_______,_______,TG(_BLNDS),_______,
 		  _______,_______,M_BLLF,_______,M_BLRT,_______,  _______,M_GCHAL,KC_K,KC_L,_______,_______,
-		_______,M_BLSLD,_______,_______,_______,_______,  _______,_______,_______,_______,KC_TRNS,_______,
-		                        _______,_______,M_BLADS,  _______,M_BLWOX,_______),
+		_______,M_BLSLD,_______,_______,_______,_______,  _______,_______,_______,_______,KC_TRNS,M_BLWOX,
+		                        _______,_______,M_BLADS,  _______,_______,_______),
 };
 
 #ifdef OLED_DRIVER_ENABLE
@@ -471,18 +471,22 @@ void render_default_layer_state(void) {
     }
 }
 void render_keylock_status(uint8_t led_usb_state) {
-    oled_write_P(PSTR("Lock:"), false);
-    oled_write_P(PSTR(" NUM "), led_usb_state & (1 << USB_LED_NUM_LOCK));
-    oled_write_P(PSTR(" CAPS "), led_usb_state & (1 << USB_LED_CAPS_LOCK));
-    oled_write_P(PSTR("     "), false);
+    oled_write_P(PSTR("Lock: "), false);
+    oled_write_P(PSTR(" "), false);
+    oled_write_P(PSTR("NUM"), led_usb_state & (1 << USB_LED_NUM_LOCK));
+    oled_write_P(PSTR(" "), false);
+    oled_write_P(PSTR("CAPS"), led_usb_state & (1 << USB_LED_CAPS_LOCK));
+    oled_write_P(PSTR("      "), false);
 }
 void render_mod_status(uint8_t modifiers) {
-    oled_write_P(PSTR("Mods:"), false);
-    oled_write_P(PSTR(" S "), (modifiers & MOD_MASK_SHIFT));
-    oled_write_P(PSTR(" C "), (modifiers & MOD_MASK_CTRL));
-    oled_write_P(PSTR(" A "), (modifiers & MOD_MASK_ALT));
-    oled_write_P(PSTR(" W "), (modifiers & MOD_MASK_GUI));
-    oled_write_P(PSTR("    "), false);
+    oled_write_P(PSTR("Mod: "), false);
+    oled_write_P(PSTR("Shft"), (modifiers & MOD_MASK_SHIFT));
+    oled_write_P(PSTR(" "), false);
+    oled_write_P(PSTR("Ctl"), (modifiers & MOD_MASK_CTRL));
+    oled_write_P(PSTR(" "), false);
+    oled_write_P(PSTR("Alt"), (modifiers & MOD_MASK_ALT));
+    oled_write_P(PSTR(" "), false);
+    oled_write_P(PSTR("Win"), (modifiers & MOD_MASK_GUI));
 }
 void render_status_main(void) {
     render_default_layer_state();
