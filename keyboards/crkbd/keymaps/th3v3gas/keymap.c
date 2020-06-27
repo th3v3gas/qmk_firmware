@@ -52,7 +52,8 @@ enum custom_keycodes {
   M_BLADS,
   M_EDT,
   M_BLNDS,
-  M_BLWOX,
+  M_VOL,
+  M_MIC,
 };
 
 //tap dance
@@ -92,12 +93,10 @@ void td01_finished (qk_tap_dance_state_t *state, void *user_date) {
     case DOUBLE_SINGLE_TAP: //wox
       layer_clear();
       layer_move(_QW);
-      register_code16(KC_LALT);
-      register_code16(KC_LCTL);
-      register_code16(KC_MINS);
-      unregister_code16(KC_LALT);
-      unregister_code16(KC_LCTL);
-      unregister_code16(KC_MINS);
+      register_code16(KC_RCTL);
+      register_code16(KC_F24);
+      unregister_code16(KC_F24);
+      unregister_code16(KC_RCTL);
   }
 }
 void td01_reset (qk_tap_dance_state_t *state, void *user_data) {
@@ -210,14 +209,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			if (record->event.pressed) {
         layer_move(_QW);
         layer_on(_CH);
-        send_string(SS_TAP(X_F17));
+        register_code(KC_RSFT);
+        send_string(SS_TAP(X_F24));
+        unregister_code(KC_RSFT);
 			};
       return false;
 		case M_DSCEXT: //exit discord overlay, switch to _GAME
 			if (record->event.pressed) {
         layer_move(_QW);
         layer_on(_GM);
-        send_string(SS_TAP(X_F17));
+        register_code(KC_RSFT);
+        send_string(SS_TAP(X_F24));
+        unregister_code(KC_RSFT);
 			};
       return false;
 		case M_EFIND: //_EDIT find
@@ -278,17 +281,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         layer_invert(_BLNDS);
 			};
       return false;
-		case M_BLWOX: //borderlands wox
+		case M_VOL: //Ear trumpet
 			if (record->event.pressed) {
-      layer_move(_QW);
-      layer_on(_CH);
-      register_code16(KC_LALT);
-      register_code16(KC_LCTL);
-      register_code16(KC_MINS);
-      unregister_code16(KC_LALT);
-      unregister_code16(KC_LCTL);
-      unregister_code16(KC_MINS);
-      send_string("g bl3 ");
+        register_code(KC_RCTL);
+        send_string(SS_TAP(X_F23));
+        unregister_code(KC_RCTL);
+			};
+      return false;
+		case M_MIC: //mute mic
+			if (record->event.pressed) {
+        register_code(KC_RSFT);
+        send_string(SS_TAP(X_F23));
+        unregister_code(KC_RSFT);
 			};
       return false;
   }
@@ -335,14 +339,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-----------------------------------|  |-----------------------------------+
 *	|     |     |     |copy |paste|     |  |     |     |     |     |QGWOX|     |
 *	+-----------------------------------|  |-----------------------------------+
-*	                  |  +  |  -  |  _  |  |  _  |  (  |  )  |
+*	                  |  +  |  -  |space|  |  _  |  (  |  )  |
 *	                  +-----------------+  +-----------------+
 */
 	[_THUMB] = LAYOUT(
                     KC_GRV,KC_1,KC_2,KC_3,KC_4,KC_5,  KC_6,KC_7,KC_8,KC_9,KC_0,_______,
 		_______,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,XXXXXXX,KC_BSLS,
 		_______,XXXXXXX,XXXXXXX,C(KC_C),C(KC_V),XXXXXXX,  KC_HOME,KC_PGDN,KC_PGUP,KC_END,KC_TRNS,_______,
-		                        KC_PPLS,KC_MINS,KC_UNDS,  KC_UNDS,KC_LPRN,KC_RPRN),
+		                         KC_PPLS,KC_MINS,KC_SPC,  KC_UNDS,KC_LPRN,KC_RPRN),
 
 /* _FN _FUNCTION
 *	+-----------------------------------+  +-----------------------------------+
@@ -350,33 +354,33 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-----------------------------------|  |-----------------------------------+
 *	|CAPS | n1  | n2  | n3  | n4  | n5  |  | n6  | n7  | n8  | n9  | n0  |     |  tap dance TD_CAPS
 *	|-----------------------------------|  |-----------------------------------+
-*	|     |     |     |     |     |     |  |     |     |     |     |QGWOX|rsft |
+*	|     |     |     |     |     |     |  |     |     | F15 | F16 |QGWOX|rsft |
 *	+-----------------------------------|  |-----------------------------------+
-*	                  |  @  |  =  |  _  |  |  _  |     |     |
+*	                  |  @  |  =  |space|  |  _  |     |     |
 *	                  +-----------------+  +-----------------+
 */
 	[_FUNCTION] = LAYOUT(
     C(S(KC_ESC)),TD(TD_F1F11),TD(TD_F2F12),KC_F3,KC_F4,KC_F5,  KC_F6,KC_F7,KC_F8,KC_F9,KC_F10,KC_PSCR,
 		               TD(TD_CAPS),KC_P1,KC_P2,KC_P3,KC_P4,KC_P5,  KC_P6,KC_P7,KC_P8,KC_P9,KC_P0,M_EDT,
-		         _______,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,KC_F16,KC_TRNS,KC_RSFT,
-		                                    KC_AT,KC_EQL,KC_UNDS,  KC_UNDS,_______,_______),
+		         XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,M_VOL,M_MIC,KC_TRNS,KC_RSFT,
+		                                     KC_AT,KC_EQL,KC_SPC,  KC_UNDS,_______,_______),
 
 /* _EDT _EDIT
 *	+-----------------------------------+  +-----------------------------------+
-*	|     |  [  |  ]  |  (  |  )  |  /  |  |undo |     |     |     |     |     |
+*	|     |  [  |  ]  |  (  |  )  |bspce|  |redo |     |     |     |     |     |
 *	|-----------------------------------|  |-----------------------------------+
-*	|     |slall|save |     |find | del |  |left |down | up  |right|     |     |
+*	|     |slall|save |     |find |  /  |  |left |down | up  |right|     |     |
 *	|-----------------------------------|  |-----------------------------------+
-*	|     |undo | cut |     |bspce|enter|  |     |     |     |     |QGWOX|     |
+*	|     |undo | cut |left |right|enter|  |home |PGDN |PGUP | end |QGWOX|     |
 *	+-----------------------------------|  |-----------------------------------+
-*	                  |copy |paste|space|  |     |     |     |
+*	                  |copy |paste| del |  |     |     |     |
 *	                  +-----------------+  +-----------------+
 */
 	[_EDIT] = LAYOUT(
-    _______,KC_LBRC,KC_RBRC,KC_LPRN,KC_RPRN,KC_SLSH,  C(KC_Y),XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,TO(_QW),
-     KC_TRNS,C(KC_A),C(KC_S),XXXXXXX,M_EFIND,KC_DEL,  KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,XXXXXXX,KC_TRNS,
-  	 KC_TRNS,C(KC_Z),C(KC_X),XXXXXXX,KC_BSPC,KC_ENT,  KC_HOME,KC_PGDN,KC_PGUP,KC_END,KC_TRNS,_______,
-                             C(KC_C),C(KC_V),KC_SPC,  _______,KC_TRNS,_______),
+    _______,KC_LBRC,KC_RBRC,KC_LPRN,KC_RPRN,KC_BSPC,  C(KC_Y),XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,TO(_QW),
+    KC_TRNS,C(KC_A),C(KC_S),XXXXXXX,M_EFIND,KC_PSLS,  KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,XXXXXXX,KC_TRNS,
+  	 KC_TRNS,C(KC_Z),C(KC_X),KC_LEFT,KC_RGHT,KC_ENT,  KC_HOME,KC_PGDN,KC_PGUP,KC_END,KC_TRNS,_______,
+                             C(KC_C),C(KC_V),KC_DEL,  _______,KC_TRNS,_______),
 
 /* _GM _GAME        BASE LAYER
 *	+-----------------------------------+  +-----------------------------------+
@@ -392,7 +396,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_GAME] = LAYOUT(
       KC_ESC,KC_T,KC_Q,KC_W,KC_E,KC_R,  KC_J,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
     MO(_GFN),KC_G,KC_A,KC_S,KC_D,KC_F,  KC_H,M_GCHAL,M_GCHTM,M_GCHAT,KC_SCLN,TD(TD_FNWIN),
-     KC_LSFT,KC_B,KC_Z,KC_X,KC_C,KC_V,  KC_N,KC_M,KC_COMM,KC_DOT,TD(TD_QGWOX),KC_SFTENT,
+     KC_LSFT,KC_B,KC_Z,KC_X,KC_C,KC_V,  KC_N,KC_M,KC_COMM,M_MIC,TD(TD_QGWOX),KC_SFTENT,
                KC_LBRC,KC_RBRC,KC_DEL,  KC_SPC,LT(_TH,KC_PAUS),M_DSCRD),
 
 /* _GFN _GAME_FUNCTION
@@ -403,15 +407,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-----------------------------------|  |-----------------------------------+
 *	| ctl | f3  |  1  |  2  |  3  | f6  |  | F12 |     |     |     |QGWOX|     |
 *	+-----------------------------------|  |-----------------------------------+
-*	                  |  /  |  *  |  0  |  |     |     |     |
+*	                  |  0  |  /  |space|  |     |     |     |
 *	                  +-----------------+  +-----------------+
 
 */
 	[_GAME_FUNCTION] = LAYOUT(
-     KC_TAB,KC_F1,KC_7,KC_8,KC_9,KC_F4,  _______,_______,_______,_______,_______,M_BLNDS,
+     KC_TAB,KC_F1,KC_7,KC_8,KC_9,KC_F4,  KC_F9,_______,_______,_______,_______,M_BLNDS,
     _______,KC_F2,KC_4,KC_5,KC_6,KC_F5,  KC_F11,_______,_______,_______,_______,KC_TRNS,
     KC_LCTL,KC_F3,KC_1,KC_2,KC_3,KC_F6,  KC_F12,_______,_______,_______,KC_TRNS,_______,
-                  KC_PSLS,KC_PAST,KC_0,  _______,_______,_______),
+                   KC_0,KC_PSLS,KC_SPC,  KC_LALT,_______,_______),
 
 	[_CHAT] = LAYOUT( //_CH _CHAT
     M_CHESC,_______,_______,_______,_______,_______,  _______,_______,_______,_______,_______,_______,
@@ -421,7 +425,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_BLNDS] = LAYOUT( //borderlands
     _______,_______,_______,M_BLRUN,_______,_______,  KC_J,_______,_______,_______,TG(_BLNDS),_______,
 		  _______,_______,M_BLLF,_______,M_BLRT,_______,  _______,M_GCHAL,KC_K,KC_L,_______,_______,
-		_______,M_BLSLD,_______,_______,_______,_______,  _______,_______,_______,_______,KC_TRNS,M_BLWOX,
+		_______,M_BLSLD,_______,_______,_______,_______,  _______,_______,_______,_______,KC_TRNS,_______,
 		                        _______,_______,M_BLADS,  _______,_______,_______),
 };
 
