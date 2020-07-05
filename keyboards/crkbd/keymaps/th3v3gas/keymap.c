@@ -189,14 +189,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			if (record->event.pressed) {
         layer_move(_QW);
         layer_on(_CH);
-        send_string("y");
+        send_string(SS_TAP(X_Y));
 			};
       return false;
 		case M_GCHTM: //_CHAT K
 			if (record->event.pressed) {
         layer_move(_QW);
         layer_on(_CH);
-        send_string("k");
+        send_string(SS_TAP(X_K));
 			};
       return false;
 		case M_GCHAT: //_CHAT
@@ -281,7 +281,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         layer_invert(_BLNDS);
 			};
       return false;
-		case M_VOL: //Ear trumpet
+		case M_VOL: //ear trumpet
 			if (record->event.pressed) {
         register_code(KC_RCTL);
         send_string(SS_TAP(X_F23));
@@ -322,7 +322,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-----------------------------------|  |-----------------------------------+
 *	|shift|  Z  |  X  |  C  |  V  |  B  |  |  N  |M(!) |,(!?)|.(?) |QGWOX|SFTEN|  combos (M+,)=! (,+.)=?; tap dance QGWOX
 *	+-----------------------------------|  |-----------------------------------+
-*	                  |ctl *|_TH /| del |  |space|_TH [|RPRN |                    tap dance RPRN
+*	                  |ctl *|_TH /| del |  |space|_TH [|alt ]|
 *	                  +-----------------+  +-----------------+
 */
 	[_QWERTY] = LAYOUT(
@@ -345,7 +345,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_THUMB] = LAYOUT(
                     KC_GRV,KC_1,KC_2,KC_3,KC_4,KC_5,  KC_6,KC_7,KC_8,KC_9,KC_0,_______,
 		_______,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,XXXXXXX,KC_BSLS,
-		_______,XXXXXXX,XXXXXXX,C(KC_C),C(KC_V),XXXXXXX,  KC_HOME,KC_PGDN,KC_PGUP,KC_END,KC_TRNS,_______,
+		_______,XXXXXXX,XXXXXXX,C(KC_C),C(KC_V),XXXXXXX,  KC_HOME,KC_PGDN,KC_PGUP,KC_END,_______,_______,
 		                         KC_PPLS,KC_MINS,KC_SPC,  KC_UNDS,KC_LPRN,KC_RPRN),
 
 /* _FN _FUNCTION
@@ -354,7 +354,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-----------------------------------|  |-----------------------------------+
 *	|CAPS | n1  | n2  | n3  | n4  | n5  |  | n6  | n7  | n8  | n9  | n0  |     |  tap dance TD_CAPS
 *	|-----------------------------------|  |-----------------------------------+
-*	|     |     |     |     |     |     |  |     |     | F15 | F16 |QGWOX|rsft |
+*	|     |     |     |     |     |     |  |     |     | VOL | MIC |QGWOX|rsft |  macro VOL, MIC
 *	+-----------------------------------|  |-----------------------------------+
 *	                  |  @  |  =  |space|  |  _  |     |     |
 *	                  +-----------------+  +-----------------+
@@ -362,7 +362,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_FUNCTION] = LAYOUT(
     C(S(KC_ESC)),TD(TD_F1F11),TD(TD_F2F12),KC_F3,KC_F4,KC_F5,  KC_F6,KC_F7,KC_F8,KC_F9,KC_F10,KC_PSCR,
 		               TD(TD_CAPS),KC_P1,KC_P2,KC_P3,KC_P4,KC_P5,  KC_P6,KC_P7,KC_P8,KC_P9,KC_P0,M_EDT,
-		         XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,M_VOL,M_MIC,KC_TRNS,KC_RSFT,
+		         _______,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,M_VOL,M_MIC,_______,KC_RSFT,
 		                                     KC_AT,KC_EQL,KC_SPC,  KC_UNDS,_______,_______),
 
 /* _EDT _EDIT
@@ -378,8 +378,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
 	[_EDIT] = LAYOUT(
     _______,KC_LBRC,KC_RBRC,KC_LPRN,KC_RPRN,KC_BSPC,  C(KC_Y),XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,TO(_QW),
-    KC_TRNS,C(KC_A),C(KC_S),XXXXXXX,M_EFIND,KC_PSLS,  KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,XXXXXXX,KC_TRNS,
-  	 KC_TRNS,C(KC_Z),C(KC_X),KC_LEFT,KC_RGHT,KC_ENT,  KC_HOME,KC_PGDN,KC_PGUP,KC_END,KC_TRNS,_______,
+    _______,C(KC_A),C(KC_S),XXXXXXX,M_EFIND,KC_PSLS,  KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,XXXXXXX,_______,
+  	 _______,C(KC_Z),C(KC_X),KC_LEFT,KC_RGHT,KC_ENT,  KC_HOME,KC_PGDN,KC_PGUP,KC_END,_______,_______,
                              C(KC_C),C(KC_V),KC_DEL,  _______,KC_TRNS,_______),
 
 /* _GM _GAME        BASE LAYER
@@ -388,7 +388,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-----------------------------------|  |-----------------------------------+
 *	| _GF |  G  |  A  |  S  |  D  |  F  |  |  H  |GCHAL|GCHTM|GCHAT|  ;  |FNWIN|  macro GCHAL, GCHTM, GCHAT; tap dance FNWIN
 *	|-----------------------------------|  |-----------------------------------+
-*	|shift|  B  |  Z  |  X  |  C  |  V  |  |  N  |  M  |  ,  |  .  |QGWOX|SFTEN|
+*	|shift|  B  |  Z  |  X  |  C  |  V  |  |  N  |  M  |  ,  | MIC |QGWOX|SFTEN|  macro MIC
 *	+-----------------------------------|  |-----------------------------------+
 *	                  |  [  |  ]  | del |  |space|pause|DSCRD|                    macro DSCRD
 *	                  +-----------------+  +-----------------+
