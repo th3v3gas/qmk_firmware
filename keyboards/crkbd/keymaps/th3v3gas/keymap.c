@@ -372,7 +372,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_DOT,KC_T,KC_Q,KC_W,KC_E,KC_R,  KC_J,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
     MO(_GFN),KC_G,KC_A,KC_S,KC_D,KC_F,  KC_H,M_GCHAL,M_GCHTM,M_GCHAT,KC_SCLN,TD(TD_FNWIN),
      KC_LSFT,KC_B,KC_Z,KC_X,KC_C,KC_V,  KC_N,KC_M,KC_COMM,M_MIC,TD(TD_QGWOX),KC_SFTENT,
-               KC_LCTL,KC_PAST,KC_SPC,  KC_SPC,MO(_TH),M_DSCRD),
+               KC_LCTL,KC_PAST,KC_SPC,  KC_ESC,MO(_TH),M_DSCRD),
 
 /* _GFN _GAME_FUNCTION
 *	+-----------------------------------+  +-----------------------------------+
