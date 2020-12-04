@@ -346,16 +346,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-----------------------------------|  |-----------------------------------+
 *	|     |slall|save |     |find |  /  |  |left |down | up  |right|     |     |
 *	|-----------------------------------|  |-----------------------------------+
-*	|     |undo | cut |left |right|enter|  |home |PGDN |PGUP | end |QGWOX|     |
+*	|     |undo | cut |copy |paste|  *  |  |home |PGDN |PGUP | end |QGWOX|     |
 *	+-----------------------------------|  |-----------------------------------+
-*	                  |copy |paste| del |  |     |     |     |
+*	                  |enter|space| del |  |     |     |     |
 *	                  +-----------------+  +-----------------+
 */
 	[_EDIT] = LAYOUT(
     _______,KC_LBRC,KC_RBRC,KC_LPRN,KC_RPRN,KC_BSPC,  C(KC_Y),XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,TO(_QW),
     _______,C(KC_A),C(KC_S),XXXXXXX,M_EFIND,KC_PSLS,  KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,XXXXXXX,_______,
-  	 _______,C(KC_Z),C(KC_X),KC_LEFT,KC_RGHT,KC_ENT,  KC_HOME,KC_PGDN,KC_PGUP,KC_END,_______,_______,
-                             C(KC_C),C(KC_V),KC_DEL,  _______,KC_TRNS,_______),
+  	_______,C(KC_Z),C(KC_X),C(KC_C),C(KC_V),KC_PAST,  KC_HOME,KC_PGDN,KC_PGUP,KC_END,_______,_______,
+                               KC_ENT,KC_SPC,KC_DEL,  _______,KC_TRNS,_______),
 
 /* _GM _GAME        BASE LAYER
 *	+-----------------------------------+  +-----------------------------------+
@@ -365,7 +365,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-----------------------------------|  |-----------------------------------+
 *	|shift|  B  |  Z  |  X  |  C  |  V  |  |  N  |  M  |  ,  | MIC |QGWOX|SFTEN|  macro MIC
 *	+-----------------------------------|  |-----------------------------------+
-*	                  | ctr |  *  |space|  |space| _TH |DSCRD|                    macro DSCRD
+*	                  | ctr |  *  |space|  | esc | _TH |DSCRD|                    macro DSCRD
 *	                  +-----------------+  +-----------------+
 */
 	[_GAME] = LAYOUT(
