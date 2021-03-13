@@ -234,9 +234,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
 		case M_BLADS: //borderlands aim down sight
 			if (record->event.pressed) {
-        register_code(KC_DEL);
+        register_code(KC_SPC);
       } else {
-        unregister_code(KC_DEL);
+        unregister_code(KC_SPC);
         send_string(SS_TAP(X_P5));
 			};
       return false;
@@ -399,8 +399,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		                        _______,_______,_______,  _______,_______,M_DSCEXT),
 	[_BLNDS] = LAYOUT( //borderlands
     _______,_______,_______,M_BLRUN,_______,_______,  KC_J,_______,_______,_______,TG(_BLNDS),_______,
-		  _______,_______,M_BLLF,_______,M_BLRT,_______,  _______,M_GCHAL,KC_K,KC_L,_______,_______,
-		_______,M_BLSLD,_______,_______,_______,_______,  _______,_______,_______,_______,KC_TRNS,_______,
+		 MO(_GFN),_______,M_BLLF,_______,M_BLRT,_______,  _______,M_GCHAL,KC_K,KC_L,_______,_______,
+		 _______,M_BLSLD,_______,_______,_______,KC_TAB,  _______,_______,_______,_______,KC_TRNS,_______,
 		                        _______,_______,M_BLADS,  _______,_______,_______),
 };
 
