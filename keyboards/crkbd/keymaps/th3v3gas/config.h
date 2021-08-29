@@ -27,5 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define USE_SERIAL_PD2
 #define COMBO_COUNT 2
 #define TAPPING_TERM 200
+#define TAP_CODE_DELAY 50
 #define COMBO_TERM 50
 #define OLED_DISABLE_TIMEOUT

@@ -11,35 +11,63 @@ void matrix_init_user(void) {
 */
 
 enum layers_keymap {
-  _QWERTY = 0,
-  _GAME,
-  _THUMB,
+  _TOP00 = 0,
+  _QWERTY,
+  _TOP01,
   _FUNCTION,
-  _GAME_FUNCTION,
+  _QWERTY_TH,
   _CHAT
 };
 
-#define _QW _QWERTY
-#define _GM _GAME
-#define _TH _THUMB
+#define _TP0 _TOP00
+#define _QTY _QWERTY
+#define _TP1 _TOP01
 #define _FN _FUNCTION
-#define _GFN _GAME_FUNCTION
+#define _QYT _QWERTY_TH
 #define _CH _CHAT
 
 enum custom_keycodes {
   TD_F1F11,
   TD_F2F12,
-  TD_CAPS,
   TD_QGWOX,
-  TD_FNWIN,
-  TD_CHENT,
-  TD_PLDIS,
-  TD_GMDIS,
-  M_DSCRD = SAFE_RANGE, //macro
-  M_CHESC,
-  M_GCHAL,
-  M_GCHTM,
-  M_GCHAT,
+  //TD_tmp82, free macro
+  M_AFKTG = SAFE_RANGE, //OBS afk toggle
+  M_GAME0,  //OBS scene: game -cam
+  M_GAME1,  //OBS scene: game
+  M_CHAT0,  //OBS scene: chat -cam
+  M_CHAT1,  //OBS scene: chat
+  M_CAP,    //OBS scene: screen capture
+  M_PRVT1,  //OBS mute mic, camera off
+  M_VZIO0,  //OBS mute vizio
+  M_MIC0,   //OBS mic off
+  M_MIC1,   //OBS mic on
+  M_VZIO1,  //OBS unmute vizio
+  M_ALRT0,  //OBS alerts off
+  M_ALRT1,  //OBS alerts on
+  M_RPLAY,  //OBS save save replay
+  M_SBRA0,  //OBS mute siberia
+  M_SBRA1,  //OBS unmute siberia
+  M_SMSNG0, //OBS mute samsung
+  M_SMSNG1, //OBS unmute samsung
+  M_PRVW0,  //OBE preview off
+  M_VOIP0,  //OBS mute voip
+  M_VOIP1,  //OBS unmute voip
+  M_PRVW1,  //OBE preview on
+  M_BRB,    //OBS scene: brb
+  M_TMP23,
+  M_STRT0,  //OBS scene: start
+  M_TMP25,
+  M_IRPLY,  //OBS instant replay
+  M_TMP27,
+  M_TMP28,
+  M_TMP29,
+  M_TMP30,
+  M_TMP31,
+  M_TMP32,
+  M_TMP33,
+  M_TRMPT,  //ear trumpet
+  M_MICOPN, //mic on  GLOBAL
+  M_MICCLS, //mic off GLOBAL
 };
 
 //tap dance
@@ -54,14 +82,6 @@ static td_state_t td_state;
 int cur_dance (qk_tap_dance_state_t *state);
 void td01_finished (qk_tap_dance_state_t *state, void *user_data); //(ref:TD_QGWOX)
 void td01_reset (qk_tap_dance_state_t *state, void *user_data);
-void td03_finished (qk_tap_dance_state_t *state, void *user_data); //(ref:TD_FNWIN)
-void td03_reset (qk_tap_dance_state_t *state, void *user_data);
-void td05_finished (qk_tap_dance_state_t *state, void *user_data); //(ref:TD_CHENT)
-void td05_reset (qk_tap_dance_state_t *state, void *user_data);
-void td07_finished (qk_tap_dance_state_t *state, void *user_data); //(ref:TD_PLDIS)
-void td07_reset (qk_tap_dance_state_t *state, void *user_data);
-void td08_finished (qk_tap_dance_state_t *state, void *user_data); //(ref:TD_GMDIS)
-void td08_reset (qk_tap_dance_state_t *state, void *user_data);
 int cur_dance (qk_tap_dance_state_t *state) {
   if (state->count == 1) {
     if (state->interrupted || !state->pressed) { return SINGLE_TAP; }
@@ -70,32 +90,29 @@ int cur_dance (qk_tap_dance_state_t *state) {
   if (state->count == 2) { return DOUBLE_SINGLE_TAP; }
   else { return 3; }
 }
-//TD _QWERTY; _GAME; wox (ref:TD_QGWOX)
+//(ref:TD_QGWOX)
 void td01_finished (qk_tap_dance_state_t *state, void *user_date) {
   td_state = cur_dance(state);
   switch (td_state) {
-    case SINGLE_TAP: //_QWERTY
+    case SINGLE_TAP: //_TOP00
       layer_clear();
       break;
-    case SINGLE_HOLD: //_GAME
-      layer_move(_GM);
+    case SINGLE_HOLD: //_QWERTY
+      layer_move(_QTY);
       break;
     case DOUBLE_SINGLE_TAP: //wox
-      layer_move(_QW);
-      register_code16(KC_LALT);
-      register_code16(KC_LCTL);
-      register_code16(KC_MINS);
       layer_clear();
-      layer_move(_QW);
-      unregister_code16(KC_LALT);
-      unregister_code16(KC_LCTL);
-      unregister_code16(KC_MINS);
+      layer_move(_QTY);
+      register_code16(KC_RCTL);
+      register_code16(KC_F24);
+      unregister_code16(KC_F24);
+      unregister_code16(KC_RCTL);
   }
 }
 void td01_reset (qk_tap_dance_state_t *state, void *user_data) {
   switch (td_state) {
     case SINGLE_TAP:
-      layer_move(_QW);
+      layer_move(_TP0);
       break;
     case SINGLE_HOLD:
       NULL;
@@ -104,161 +121,445 @@ void td01_reset (qk_tap_dance_state_t *state, void *user_data) {
       NULL;
   }
 }
-//TD quote; _FN; win (ref:TD_FNWIN)
-void td03_finished (qk_tap_dance_state_t *state, void *user_date) {
-  td_state = cur_dance(state);
-  switch (td_state) {
-    case SINGLE_TAP: //quote
-      register_code16(KC_QUOT);
-      break;
-    case SINGLE_HOLD: //momentary _FM
-      layer_on(_FN);
-      break;
-    case DOUBLE_SINGLE_TAP: //win
-      layer_clear();
-      layer_move(_QW);
-      register_code16(KC_LGUI);
-  }
+//free macro(ref:TD_tmp82)
+/*
+void tmp82_finished(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        register_code(KC_LSFT);
+        register_code(KC_LGUI);
+        register_code(KC_F14);
+    } else {
+        register_code(KC_LSFT);
+        register_code(KC_LGUI);
+        register_code(KC_F15);
+    }
 }
-void td03_reset (qk_tap_dance_state_t *state, void *user_data) {
-  switch (td_state) {
-    case SINGLE_TAP:
-      unregister_code16(KC_QUOT);
-      break;
-    case SINGLE_HOLD:
-      layer_off(_FN);
-      break;
-    case DOUBLE_SINGLE_TAP:
-      unregister_code16(KC_LGUI);
-  }
+void tmp82_reset(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        unregister_code(KC_F14);
+        unregister_code(KC_LGUI);
+        unregister_code(KC_LSFT);
+    } else {
+        unregister_code(KC_F15);
+        unregister_code(KC_LGUI);
+        unregister_code(KC_LSFT);
+    }
 }
-//TD _GAME enter; enter; _CHAT (ref:TD_CHENT)
-void td05_finished (qk_tap_dance_state_t *state, void *user_date) {
-  td_state = cur_dance(state);
-  switch (td_state) {
-    case SINGLE_TAP: //_GAME enter
-      layer_move(_GM);
-      register_code16(KC_ENT);
-      break;
-    case SINGLE_HOLD: //enter
-      register_code16(KC_ENT);
-      unregister_code16(KC_ENT);
-      break;
-    case DOUBLE_SINGLE_TAP:
-      NULL;
-  }
-}
-void td05_reset (qk_tap_dance_state_t *state, void *user_data) {
-  switch (td_state) {
-    case SINGLE_TAP:
-      unregister_code16(KC_ENT);
-      break;
-    case SINGLE_HOLD:
-      NULL;
-      break;
-    case DOUBLE_SINGLE_TAP:
-      NULL;
-  }
-}
-//TD plus; discord (ref:TD_PLDIS)
-void td07_finished (qk_tap_dance_state_t *state, void *user_date) {
-  td_state = cur_dance(state);
-  switch (td_state) {
-    case SINGLE_TAP: //plus
-      register_code16(KC_PPLS);
-      break;
-    case SINGLE_HOLD: //plus
-      register_code16(KC_PPLS);
-      break;
-    case DOUBLE_SINGLE_TAP: //discord
-      register_code16(KC_F17);
-      unregister_code16(KC_F17);
-  }
-}
-void td07_reset (qk_tap_dance_state_t *state, void *user_data) {
-  switch (td_state) {
-    case SINGLE_TAP:
-      unregister_code16(KC_PPLS);
-      break;
-    case SINGLE_HOLD:
-      unregister_code16(KC_PPLS);
-      break;
-    case DOUBLE_SINGLE_TAP:
-      NULL;
-  }
-}
-//TD right; _CHAT, discord (ref:TD_GMDIS)
-void td08_finished (qk_tap_dance_state_t *state, void *user_date) {
-  td_state = cur_dance(state);
-  switch (td_state) {
-    case SINGLE_TAP: //right
-      register_code16(KC_RGHT);
-      break;
-    case SINGLE_HOLD: //right
-      register_code16(KC_RGHT);
-      break;
-    case DOUBLE_SINGLE_TAP: //_CHAT discord
-      layer_move(_QW);
-      layer_on(_CH);
-      register_code16(KC_F17);
-      unregister_code16(KC_F17);
-  }
-}
-void td08_reset (qk_tap_dance_state_t *state, void *user_data) {
-  switch (td_state) {
-    case SINGLE_TAP:
-      unregister_code16(KC_RGHT);
-      break;
-    case SINGLE_HOLD:
-      unregister_code16(KC_RGHT);
-      break;
-    case DOUBLE_SINGLE_TAP:
-      NULL;
-  }
-}
+*/
 qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_F1F11] = ACTION_TAP_DANCE_DOUBLE(KC_F1, KC_F11),
   [TD_F2F12] = ACTION_TAP_DANCE_DOUBLE(KC_F2, KC_F12),
-  [TD_CAPS] = ACTION_TAP_DANCE_DOUBLE(_______, KC_CAPS),
   [TD_QGWOX] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td01_finished, td01_reset),
-  [TD_FNWIN] = ACTION_TAP_DANCE_FN_ADVANCED_TIME (NULL, td03_finished, td03_reset, 160),
-  [TD_CHENT] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, td05_finished, td05_reset, 170),
-  [TD_PLDIS] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, td07_finished, td07_reset, 160),
-  [TD_GMDIS] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, td08_finished, td08_reset, 160),
+//  [TD_tmp82] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, tmp82_finished, tmp82_reset, 160),
 };
 
 //macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
-		case M_DSCRD: //_GAME Discord
+// SHIFT + GUI + FUNCTION
+		case M_AFKTG:
 			if (record->event.pressed) {
-        send_string(SS_TAP(X_F17));
+        register_code(KC_LSFT);
+        register_code(KC_LGUI);
+        register_code(KC_F13);
+       } else {
+        unregister_code(KC_F13);
+        unregister_code(KC_LGUI);
+        unregister_code(KC_LSFT);
 			};
       return false;
-		case M_CHESC: //_GAME ESC
+		case M_GAME0:
 			if (record->event.pressed) {
-        layer_move(_GM);
-        send_string(SS_TAP(X_ESC));
+        register_code(KC_LSFT);
+        register_code(KC_LGUI);
+        register_code(KC_F14);
+       } else {
+        unregister_code(KC_F14);
+        unregister_code(KC_LGUI);
+        unregister_code(KC_LSFT);
 			};
       return false;
-		case M_GCHAL: //_CHAT Y
+		case M_GAME1:
 			if (record->event.pressed) {
-        layer_move(_QW);
-        layer_on(_CH);
-        send_string(SS_TAP(X_Y));
+        register_code(KC_LSFT);
+        register_code(KC_LGUI);
+        register_code(KC_F15);
+       } else {
+        unregister_code(KC_F15);
+        unregister_code(KC_LGUI);
+        unregister_code(KC_LSFT);
 			};
       return false;
-		case M_GCHTM: //_CHAT K
+		case M_CHAT0:
 			if (record->event.pressed) {
-        layer_move(_QW);
-        layer_on(_CH);
-        send_string(SS_TAP(X_K));
+        register_code(KC_LSFT);
+        register_code(KC_LGUI);
+        register_code(KC_F16);
+       } else {
+        unregister_code(KC_F16);
+        unregister_code(KC_LGUI);
+        unregister_code(KC_LSFT);
 			};
       return false;
-		case M_GCHAT: //_CHAT K
+		case M_CHAT1:
 			if (record->event.pressed) {
-        layer_move(_QW);
-        layer_on(_CH);
+        register_code(KC_LSFT);
+        register_code(KC_LGUI);
+        register_code(KC_F17);
+       } else {
+        unregister_code(KC_F17);
+        unregister_code(KC_LGUI);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_CAP:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LGUI);
+        register_code(KC_F18);
+       } else {
+        unregister_code(KC_F18);
+        unregister_code(KC_LGUI);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_PRVT1:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LGUI);
+        register_code(KC_F19);
+       } else {
+        unregister_code(KC_F19);
+        unregister_code(KC_LGUI);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_VZIO0:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LGUI);
+        register_code(KC_F20);
+       } else {
+        unregister_code(KC_F20);
+        unregister_code(KC_LGUI);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_MIC0:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LGUI);
+        register_code(KC_F23);
+       } else {
+        unregister_code(KC_F23);
+        unregister_code(KC_LGUI);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_MIC1:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LGUI);
+        register_code(KC_F24);
+       } else {
+        unregister_code(KC_F24);
+        unregister_code(KC_LGUI);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+
+// CTRL + ALT + FUNCTION
+		case M_VZIO1:
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_LALT);
+        register_code(KC_F13);
+       } else {
+        unregister_code(KC_F13);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LCTL);
+			};
+      return false;
+		case M_ALRT0:
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_LALT);
+        register_code(KC_F14);
+       } else {
+        unregister_code(KC_F14);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LCTL);
+			};
+      return false;
+		case M_ALRT1:
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_LALT);
+        register_code(KC_F15);
+       } else {
+        unregister_code(KC_F15);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LCTL);
+			};
+      return false;
+		case M_RPLAY:
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_LALT);
+        register_code(KC_F16);
+       } else {
+        unregister_code(KC_F16);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LCTL);
+			};
+      return false;
+		case M_SBRA0:
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_LALT);
+        register_code(KC_F17);
+       } else {
+        unregister_code(KC_F17);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LCTL);
+			};
+      return false;
+		case M_SBRA1:
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_LALT);
+        register_code(KC_F18);
+       } else {
+        unregister_code(KC_F18);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LCTL);
+			};
+      return false;
+		case M_SMSNG0:
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_LALT);
+        register_code(KC_F19);
+       } else {
+        unregister_code(KC_F19);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LCTL);
+			};
+      return false;
+		case M_SMSNG1:
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_LALT);
+        register_code(KC_F20);
+       } else {
+        unregister_code(KC_F20);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LCTL);
+			};
+      return false;
+		case M_PRVW0:
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_LALT);
+        register_code(KC_F21);
+       } else {
+        unregister_code(KC_F21);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LCTL);
+			};
+      return false;
+		case M_VOIP0:
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_LALT);
+        register_code(KC_F22);
+       } else {
+        unregister_code(KC_F22);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LCTL);
+			};
+      return false;
+		case M_VOIP1:
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_LALT);
+        register_code(KC_F23);
+       } else {
+        unregister_code(KC_F23);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LCTL);
+			};
+      return false;
+		case M_PRVW1:
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_LALT);
+        register_code(KC_F24);
+       } else {
+        unregister_code(KC_F24);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LCTL);
+			};
+      return false;
+
+// SHIFT + ALT + FUNCTION
+		case M_BRB:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        register_code(KC_F13);
+       } else {
+        unregister_code(KC_F13);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_TMP23:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        register_code(KC_F14);
+       } else {
+        unregister_code(KC_F14);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_STRT0:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        register_code(KC_F15);
+       } else {
+        unregister_code(KC_F15);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_TMP25:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        register_code(KC_F16);
+       } else {
+        unregister_code(KC_F16);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_IRPLY:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        register_code(KC_F17);
+       } else {
+        unregister_code(KC_F17);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_TMP27:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        register_code(KC_F18);
+       } else {
+        unregister_code(KC_F18);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_TMP28:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        register_code(KC_F19);
+       } else {
+        unregister_code(KC_F19);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_TMP29:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        register_code(KC_F20);
+       } else {
+        unregister_code(KC_F20);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_TMP30:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        register_code(KC_F21);
+       } else {
+        unregister_code(KC_F21);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_TMP31:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        register_code(KC_F22);
+       } else {
+        unregister_code(KC_F22);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_TMP32:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        register_code(KC_F23);
+       } else {
+        unregister_code(KC_F23);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_TMP33:
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        register_code(KC_F24);
+       } else {
+        unregister_code(KC_F24);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_TRMPT:
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_F23);
+       } else {
+        unregister_code(KC_F23);
+        unregister_code(KC_LCTL);
+			};
+      return false;
+		case M_MICCLS:  //mutemic
+			if (record->event.pressed) {
+        register_code(KC_LSFT);
+        register_code(KC_F22);
+       } else {
+        unregister_code(KC_F22);
+        unregister_code(KC_LSFT);
+			};
+      return false;
+		case M_MICOPN:  //mutemic
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_F22);
+       } else {
+        unregister_code(KC_F22);
+        unregister_code(KC_LCTL);
 			};
       return false;
   }
@@ -280,7 +581,7 @@ combo_t key_combos[COMBO_COUNT] = {
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-/* _QW _QWERTY      DEFAULT LAYER
+/* _TP0 _TOP00      DEFAULT LAYER
 *	,-------------------------------------------------------------------------.
 *	|esCTL|  Q  |  W  |  E  |  R  |  T  |  Y  |  U  |  I  |  O  |  P  |Bspace |
 *	|-------------------------------------------------------------------------+
@@ -288,31 +589,33 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-------------------------------------------------------------------------+
 *	| shift |  Z  |  X  |  C  |  V  |  B  |  N  |M(!) |,(!?)|.(?) |QGWOX|SFTEN| combos (M+,)=! (,+.)=?; tap dance QGWOX
 *	|-------------------------------------------------------------------------+
-*	|     |     |     |alt -|/ _TH |   space   |* _TH |PLDIS|     |     |     | tap dance PLDIS
+*	|     |     |     |alt -|/ _TP1 |   space   |* _TP1 |PLDIS|     |     |     | tap dance PLDIS
 *	`-------------------------------------------------------------------------'
 */
-	[_QWERTY] = LAYOUT(CTL_T(KC_ESC),KC_Q,KC_W,KC_E,KC_R,KC_T,KC_Y,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
-		LT(_FN,KC_TAB),KC_A,KC_S,KC_D,KC_F,KC_G,KC_H,KC_J,KC_K,KC_L,KC_SCLN,TD(TD_FNWIN),
-		KC_LSFT,KC_Z,KC_X,KC_C,KC_V,KC_B,KC_N,KC_M,KC_COMM,KC_DOT,TD(TD_QGWOX),KC_SFTENT,
-		_______,_______,_______,LALT_T(KC_MINS),LT(_TH,KC_SLSH),KC_SPC,LT(_TH,KC_PAST),TD(TD_PLDIS),C(S(KC_EQL)),_______,_______),
+	[_TOP00] = LAYOUT(
+    KC_ESC ,M_PRVW0 ,M_CHAT0 ,M_GAME0 ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,M_BRB,
+    LT(_TP1,KC_TAB),_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,M_TMP25 ,M_TMP23 ,M_TMP27 ,_______,
+    M_TRMPT ,M_ALRT0 ,M_SMSNG0 ,M_SBRA0 ,M_VZIO0 ,M_VOIP0 ,_______ ,_______ ,_______ ,_______ ,_______ ,KC_ENT,
+    M_MICOPN ,KC_ESC ,KC_TAB ,TD(TD_QGWOX) ,M_MIC0 ,M_PRVT1,M_RPLAY ,_______ ,_______ ,_______ ,_______),
 
-/* _GM _GAME        DEFAULT LAYER
+/* _QTY _QWERTY        DEFAULT LAYER
 *	,-------------------------------------------------------------------------.
 *	| esc |  T  |  Q  |  W  |  E  |  R  |  J  |  U  |  I  |  O  |  P  |Bspace |
 *	|-------------------------------------------------------------------------+
-*	|tb_GFN|  G  |  A  |  S  |  D  |  F  |  H  |GCHAL|GCHTM|GCHAT|  ;  |FNWIN | macro GCHAL, GCHTM, GCHAT; tap dance FNWIN
+*	|tb_QYT|  G  |  A  |  S  |  D  |  F  |  H  |GCHAL|GCHTM|GCHAT|  ;  |FNWIN | macro GCHAL, GCHTM, GCHAT; tap dance FNWIN
 *	|-------------------------------------------------------------------------+
 *	| shift |  B  |  Z  |  X  |  C  |  V  |  N  |  M  |  ,  |  .  |QGWOX|SFTEN|
 *	|-------------------------------------------------------------------------+
-*	|     |     |     |  -  |  /  |   space   |* _TH |GMDIS|     |     |     | tap dance GMDIS
+*	|     |     |     |  -  |  /  |   space   |* _TP1 |GMDIS|     |     |     | tap dance GMDIS
 *	`-------------------------------------------------------------------------'
 */
-	[_GAME] = LAYOUT(KC_ESC,KC_T,KC_Q,KC_W,KC_E,KC_R,KC_J,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
-    MO(_GFN),KC_G,KC_A,KC_S,KC_D,KC_F,KC_H,M_GCHAL,M_GCHTM,M_GCHAT,KC_SCLN,TD(TD_FNWIN),
-    KC_LSFT,KC_B,KC_Z,KC_X,KC_C,KC_V,KC_N,KC_M,KC_COMM,KC_DOT,TD(TD_QGWOX),KC_SFTENT,
-    _______,_______,_______,KC_LBRC,KC_RBRC,KC_SPC,LT(_TH,KC_LEFT),TD(TD_GMDIS),_______,_______,_______),
+	[_QWERTY] = LAYOUT(
+    TO(_TP0)  ,KC_Q ,KC_W ,KC_E ,KC_R ,KC_T ,KC_Y ,KC_U ,KC_I ,KC_O ,KC_P ,KC_BSPC,
+    KC_TAB  ,KC_A ,KC_S ,KC_D ,KC_F ,KC_G ,KC_H ,KC_J ,KC_K ,KC_L ,KC_SCLN  ,KC_QUOT,
+    KC_LSFT ,KC_Z ,KC_X ,KC_C ,KC_V ,KC_B ,KC_N ,KC_M ,KC_COMM  ,KC_DOT ,KC_DEL ,TO(_TP0),
+    KC_LCTL ,KC_LGUI  ,KC_LALT  ,TD(TD_QGWOX) ,MO(_QYT) ,KC_SPC ,_______  ,KC_LEFT  ,KC_DOWN  ,KC_UP  ,KC_RGHT),
 
-/* _TH _THUMB
+/* _TP1 _TOP01
 *	,-------------------------------------------------------------------------.
 *	| ` ~ |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  0  |DELETE |
 *	|-------------------------------------------------------------------------+
@@ -323,33 +626,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|     |     |     |  @  |  [   |     _     |  ]   |  =  |     |     |     |
 *	`-------------------------------------------------------------------------'
 */
-	[_THUMB] = LAYOUT(KC_GRV,KC_1,KC_2,KC_3,KC_4,KC_5,KC_6,KC_7,KC_8,KC_9,KC_0,KC_DEL,
-		_______,_______,_______,_______,_______,XXXXXXX,KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,_______,KC_BSLS,
-		_______,C(KC_Z),C(KC_X),C(KC_C),C(KC_V),_______,_______,_______,_______,_______,TD(TD_QGWOX),_______,
-		_______,_______,_______,KC_AT,KC_LBRC,KC_UNDS,KC_RBRC,KC_EQL,_______,_______,_______),
+	[_TOP01] = LAYOUT(
+    _______ ,M_PRVW1 ,M_CHAT1 ,M_GAME1 ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,M_STRT0 ,M_CAP,
+		LT(_TP1,KC_TAB),_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______,
+		_______ ,M_ALRT1 ,M_SMSNG1 ,M_SBRA1 ,M_VZIO1 ,M_VOIP1 ,_______ ,_______ ,_______ ,_______ ,_______ ,_______,
+    M_MICCLS ,_______ ,_______ ,TD(TD_QGWOX) ,M_MIC1 ,M_AFKTG  ,M_IRPLY ,_______ ,_______ ,_______ ,_______),
 
 /* _FN _FUNCTION
 *	,-------------------------------------------------------------------------.
 *	|(tsk)|F1F11|F2F12| F3  | F4  | F5  | F6  | F7  | F8  | F9  | F10 |PrtScr | (tsk) = task manager; tap dance F1F11, F2F12
 *	|-------------------------------------------------------------------------+
-*	| CAPS | n1  | n2  | n3  | n4  | n5  | n6  | n7  | n8  | n9  | n0  |      | tap dance TD_CAPS
+*	| CAPS | n1  | n2  | n3  | n4  | n5  | n6  | n7  | n8  | n9  | n0  |      |
 *	|-------------------------------------------------------------------------+
 *	|       |     |     |     |     |     |home |pgup |pgdn | end |     |rsft |
 *	|-------------------------------------------------------------------------+
 *	|     |     |     |  @  |  [   |     _     |  ]   |  =  |     |     |     |
 *	`-------------------------------------------------------------------------'
 */
-	[_FUNCTION] = LAYOUT(C(S(KC_ESC)),TD(TD_F1F11),TD(TD_F2F12),KC_F3,KC_F4,KC_F5,KC_F6,KC_F7,KC_F8,KC_F9,KC_F10,KC_PSCR,
-		TD(TD_CAPS),KC_P1,KC_P2,KC_P3,KC_P4,KC_P5,KC_P6,KC_P7,KC_P8,KC_P9,KC_P0,_______,
-		_______,_______,_______,_______,_______,_______,KC_HOME,KC_PGDN,KC_PGUP, KC_END,TD(TD_QGWOX),KC_RSFT,
-		_______,_______,_______,KC_AT,KC_LBRC,KC_UNDS,KC_RBRC,KC_EQL,_______,_______,_______),
+	[_FUNCTION] = LAYOUT(
+    _______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______,
+		_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______,
+		_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______,
+    _______ ,_______ ,_______ ,TD(TD_QGWOX) ,_______ ,_______ ,_______ ,_______ ,_______ ,_______ ,_______),
 
 /*    mouse reserved
     |___| 5 | 6 | scrl|
     | 3 |pdn| 4 | f7  |
     | 1 |pup| 2 | f8  |   */
 
-/* _GFN _GAME_FUNCTION
+/* _QYT _QWERTY_TH
 *	,-------------------------------------------------------------------------.
 *	| del |  f1  |  7  |  8  |  9  | f4  |  Y  |     |     |     |     |       |
 *	|-------------------------------------------------------------------------+
@@ -360,18 +665,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	| ctl |     |     | n/  |   0  |    n*     | F11  | F12 |     |     |     |
 *	`-------------------------------------------------------------------------'
 */
-	[_GAME_FUNCTION] = LAYOUT(
-     KC_DEL,  KC_F1,   KC_7,   KC_8,   KC_9,  KC_F4,   KC_Y,_______,_______,_______,_______,_______,
-    _______,  KC_F2,   KC_4,   KC_5,   KC_6,  KC_F5,KC_PPLS,   KC_J,   KC_K,   KC_L,_______,_______,
-     KC_TAB,  KC_F3,   KC_1,   KC_2,   KC_3,  KC_F6,KC_PMNS,_______,_______,_______,TD(TD_QGWOX),_______,
-   KC_RCTRL,_______,_______,KC_PSLS,   KC_0,KC_PAST, KC_F11, KC_F12,_______,_______,_______),
+	[_QWERTY_TH] = LAYOUT(
+    _______ ,KC_1 ,KC_2 ,KC_3 ,KC_4 ,KC_5 ,KC_6 ,KC_7 ,KC_8 ,KC_9 ,KC_0 ,_______,
+    _______ ,TD(TD_F1F11),TD(TD_F2F12),KC_F3 ,KC_F4 ,KC_F5 ,KC_F6 ,KC_F7 ,KC_F8 ,KC_F9 ,KC_F10  ,_______,
+    _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,
+    _______,_______,_______,TD(TD_QGWOX),_______,_______,_______,_______,_______,_______,_______),
 
 // _CH _CHAT
 	[_CHAT] = LAYOUT(
-    M_CHESC,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,
+    _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,
 		_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,
-		_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,TD(TD_QGWOX),TD(TD_CHENT),
-		_______,_______,_______,_______,_______,_______,_______,M_DSCRD,_______,_______,_______),
+		_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,TD(TD_QGWOX),_______,
+		_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______),
 };
 
 //per layer underglow
@@ -388,28 +693,31 @@ void matrix_scan_user(void) {
   uint8_t new_layer = biton32(layer_state);
   if (old_layer != new_layer) {
     switch (new_layer) {
-      case _QW:
-        rgblight_disable_noeeprom();
+      case _TP0:
+        rgblight_enable_noeeprom();
+        rgblight_sethsv_noeeprom(HSV_RED);
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_KNIGHT + 0);
+//        rgblight_disable_noeeprom();
         break;
-      case _GM:
+      case _QTY:
         rgblight_enable_noeeprom();
         rgblight_sethsv_noeeprom(HSV_MAGENTA);
         rgblight_mode_noeeprom(RGBLIGHT_MODE_KNIGHT + 0);
         break;
-      case _TH:
+      case _TP1:
         rgblight_enable_noeeprom();
-        rgblight_sethsv_noeeprom(HSV_CYAN);
-        rgblight_mode_noeeprom(RGBLIGHT_MODE_KNIGHT + 1);
+        rgblight_sethsv_noeeprom(HSV_RED);
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_KNIGHT + 2);
         break;
       case _FN:
         rgblight_enable_noeeprom();
         rgblight_sethsv_noeeprom(HSV_CYAN);
         rgblight_mode_noeeprom(RGBLIGHT_MODE_KNIGHT + 1);
         break;
-      case _GFN:
+      case _QYT:
         rgblight_enable_noeeprom();
-        rgblight_sethsv_noeeprom(HSV_GREEN);
-        rgblight_mode_noeeprom(RGBLIGHT_MODE_KNIGHT + 1);
+        rgblight_sethsv_noeeprom(HSV_MAGENTA);
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_KNIGHT + 2);
         break;
       case _CH:
         rgblight_enable_noeeprom();

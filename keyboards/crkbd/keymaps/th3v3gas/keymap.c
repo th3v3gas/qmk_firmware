@@ -54,6 +54,7 @@ enum custom_keycodes {
   M_VOL,
   M_MIC,
   M_CHENT,
+  M_PPT,
 };
 
 //tap dance
@@ -270,6 +271,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         send_string(SS_TAP(X_ENT));
 			};
       return false;
+		case M_PPT:  //obs ptt
+			if (record->event.pressed) {
+        register_code(KC_LCTL);
+        tap_code(KC_F17);
+        unregister_code(KC_LCTL);
+        register_code(KC_T);
+       } else {
+        unregister_code(KC_T);
+        register_code(KC_LCTL);
+        tap_code(KC_F18);
+        unregister_code(KC_LCTL);
+			};
+      return false;
   }
   return true;
 };
@@ -369,10 +383,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	                  +-----------------+  +-----------------+
 */
 	[_GAME] = LAYOUT(
-      KC_DOT,KC_T,KC_Q,KC_W,KC_E,KC_R,  KC_J,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
+      KC_DOT,M_PPT,KC_Q,KC_W,KC_E,KC_R,  KC_J,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
     MO(_GFN),KC_G,KC_A,KC_S,KC_D,KC_F,  KC_H,M_GCHAL,M_GCHTM,M_GCHAT,KC_SCLN,TD(TD_FNWIN),
      KC_LSFT,KC_B,KC_Z,KC_X,KC_C,KC_V,  KC_N,KC_M,KC_COMM,M_MIC,TD(TD_QGWOX),KC_SFTENT,
-               KC_LCTL,KC_PAST,KC_SPC,  KC_ESC,MO(_TH),M_DSCRD),
+               KC_LCTL,KC_PAST,KC_SPC,  KC_ESC,MO(_TH),KC_TAB),
 
 /* _GFN _GAME_FUNCTION
 *	+-----------------------------------+  +-----------------------------------+
