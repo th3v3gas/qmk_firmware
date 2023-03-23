@@ -19,7 +19,8 @@ enum layers_keymap {
   _EDIT,
   _THUMB,
   _FUNCTION,
-  _GAME_FUNCTION,
+  _GFUNC1,
+  _GFUNC2,
   _CHAT,
 };
 
