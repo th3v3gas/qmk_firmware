@@ -17,11 +17,13 @@
 
 enum layers_keymap {
   _TOP = 0,
+  _ARW,
   _VOL,
 };
 
 enum custom_keycodes {
     TD_STEAM,
+    TD_ARW,
     TD_UPLAY,
     M_VOL = SAFE_RANGE,
     M_MICMUTE,
@@ -44,6 +46,8 @@ static td_state_t td_state;
 int cur_dance (qk_tap_dance_state_t *state);
 void td01_finished (qk_tap_dance_state_t *state, void *user_data); //(ref:TD_STEAM)
 void td01_reset (qk_tap_dance_state_t *state, void *user_data);
+void td02_finished (qk_tap_dance_state_t *state, void *user_data); //(ref:TD_ARW)
+void td02_reset (qk_tap_dance_state_t *state, void *user_data);
 void td03_finished (qk_tap_dance_state_t *state, void *user_data); //(ref:TD_UPLAY)
 void td03_reset (qk_tap_dance_state_t *state, void *user_data);
 int cur_dance (qk_tap_dance_state_t *state) {
@@ -88,6 +92,34 @@ void td01_reset (qk_tap_dance_state_t *state, void *user_data) {
       unregister_code16(KC_LSFT);
   }
 }
+// (ref:TD_ARW)
+void td02_finished (qk_tap_dance_state_t *state, void *user_date) {
+  td_state = cur_dance(state);
+  switch (td_state) {
+    case SINGLE_TAP: //
+      layer_clear();
+      layer_move(_TOP);
+      break;
+    case SINGLE_HOLD: //
+      layer_on(_VOL);
+      break;
+    case DOUBLE_SINGLE_TAP: //
+      NULL;
+  }
+}
+void td02_reset (qk_tap_dance_state_t *state, void *user_data) {
+  switch (td_state) {
+    case SINGLE_TAP:
+      NULL;
+      break;
+    case SINGLE_HOLD:
+      layer_off(_VOL);
+      break;
+    case DOUBLE_SINGLE_TAP:
+      layer_clear();
+      layer_move(_ARW);
+  }
+}
 // (ref:TD_UPLAY)
 void td03_finished (qk_tap_dance_state_t *state, void *user_date) {
   td_state = cur_dance(state);
@@ -124,6 +156,7 @@ void td03_reset (qk_tap_dance_state_t *state, void *user_data) {
 }
 qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_STEAM] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td01_finished, td01_reset),
+  [TD_ARW] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td02_finished, td02_reset),
   [TD_UPLAY] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td03_finished, td03_reset),
 };
 
@@ -172,15 +205,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_TOP] = LAYOUT(/* Base */
-                 KC_LGUI,   MO(_VOL),   KC_ESC,
+                 KC_LGUI,   TD(TD_ARW),   KC_ESC,
                 TD(TD_STEAM),TD(TD_UPLAY),KC_TAB,
 
                             M_VOL,
                  M_MMDISC,  M_MICOPEN,  M_MICMUTE),
     [_VOL] = LAYOUT(/* function layer */
-                 KC_VOLD,  KC_TRNS,    KC_VOLU,
+                 KC_VOLD,  TD_ARW,    KC_VOLU,
                  KC_TRNS,  KC_TRNS,    KC_TRNS,
 
                             KC_TRNS,
                  KC_TRNS,   KC_TRNS,    KC_TRNS),
+    [_ARW] = LAYOUT(/* arrow layer */
+                 KC_LGUI,  TD_ARW,    KC_ESC,
+                 TD(TD_STEAM),TD(TD_UPLAY),KC_TAB,
+
+                            KC_UP,
+                 KC_LEFT,   KC_DOWN,    KC_RGHT),
 };
