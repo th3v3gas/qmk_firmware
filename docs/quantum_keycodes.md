@@ -6,10 +6,12 @@ All keycodes within quantum are numbers between `0x0000` and `0xFFFF`. Within yo
 
 On this page we have documented keycodes between `0x00FF` and `0xFFFF` which are used to implement advanced quantum features. If you define your own custom keycodes they will be put into this range as well.
 
-## QMK Keycodes
+## QMK Keycodes :id=qmk-keycodes
 
-|Key           |Aliases  |Description                                            |
-|--------------|---------|-------------------------------------------------------|
-|`RESET`       |         |Put the keyboard into bootloader mode for flashing     |
-|`DEBUG`       |         |Toggle debug mode                                      |
-|`EEPROM_RESET`|`EEP_RST`|Reinitializes the keyboard's EEPROM (persistent memory)|
+|Key              |Aliases  |Description                                                                                                                                      |
+|-----------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+|`QK_BOOTLOADER`  |`QK_BOOT`|Put the keyboard into bootloader mode for flashing                                                                                               |
+|`QK_DEBUG_TOGGLE`|`DB_TOGG`|Toggle debug mode                                                                                                                                |
+|`QK_CLEAR_EEPROM`|`EE_CLR` |Reinitializes the keyboard's EEPROM (persistent memory)                                                                                          |
+|`QK_MAKE`        |         |Sends `qmk compile -kb (keyboard) -km (keymap)`, or `qmk flash` if shift is held. Puts keyboard into bootloader mode if shift & control are held |
+|`QK_REBOOT`      |`QK_RBT` |Resets the keyboard. Does not load the bootloader                                                                                                |

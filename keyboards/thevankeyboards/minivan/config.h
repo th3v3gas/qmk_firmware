@@ -15,22 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
 
-#include "config_common.h"
-
-/* USB Device descriptor parameter */
-#define VENDOR_ID       0xFEAE
-#define PRODUCT_ID      0x8844
-#define DEVICE_VER      0x0002
-#define MANUFACTURER    Evan Sailer
-#define PRODUCT         Minivan
-#define DESCRIPTION     keyboard firmware for Minivan
-
-/* key matrix size */
-#define MATRIX_ROWS 4
-#define MATRIX_COLS 12
 
 /*
  * Keyboard Matrix Assignments
@@ -44,22 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #define MATRIX_ROW_PINS { D7, B5, F7, D4 }
 #define MATRIX_COL_PINS { D2, D3, D5, D6, B4, B6, F6, F5, F4, F1, F0, B3 }
-#define UNUSED_PINS
 
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
-
-// #define BACKLIGHT_PIN B7
-// #define BACKLIGHT_BREATHING
-// #define BACKLIGHT_LEVELS 3
-
-/* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
-#define DEBOUNCE 5
-
-/* define if matrix has ghost (lacks anti-ghosting diodes) */
-//#define MATRIX_HAS_GHOST
-
-/* number of backlight levels */
 
 /* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */
 #define LOCKING_SUPPORT_ENABLE
@@ -70,5 +43,3 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGB_DI_PIN D0
 #define RGBLED_NUM 3
 #define RGBLIGHT_SLEEP
-
-#endif

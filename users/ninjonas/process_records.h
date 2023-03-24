@@ -15,7 +15,6 @@ enum custom_keycodes {
   M_VRSN,
   M_CODE,
   M_TERM,
-  M_COPA,
   // Secret Macros
   M_XXX1,
   M_XXX2,
@@ -26,6 +25,6 @@ enum custom_keycodes {
 
 bool process_record_secrets(uint16_t keycode, keyrecord_t *record);
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record);
-#ifdef OLED_DRIVER_ENABLE
+#ifdef OLED_ENABLE
 bool process_record_oled(uint16_t keycode, keyrecord_t *record);
 #endif

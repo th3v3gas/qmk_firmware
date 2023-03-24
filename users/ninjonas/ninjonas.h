@@ -27,6 +27,12 @@
   #include "split_util.h"
 #endif
 
+#ifdef ENCODER_ENABLE   
+bool left_encoder_rotated;
+bool right_encoder_rotated;
+uint16_t encoder_rotated_timer;
+#endif
+
 #define _QWERTY 0
 #define _DVORAK 1
 #define _COLEMAK 2
@@ -40,24 +46,17 @@
 #define K_CSCN LGUI(LCTL(LSFT(KC_4))) // Copy a portion of the screen to the clipboard
 #define K_CPRF LGUI(LSFT(KC_M)) //  Cmd + Shift + M. Used for switching Google Chrome profiles
 #define K_MDSH LSFT(LALT(KC_MINS))
-#define K_LAPP SGUI(KC_TAB) // Cmd + Shift + Tab
-#define K_RAPP LGUI(KC_TAB) // Cmd + Tab
 
 // Layer Keys
-#define LM_LOW MO(_LOWER)
-#define LM_RAI MO(_RAISE)
-#define LG_LOW TG(_LOWER)
-#define LG_RAI TG(_RAISE)
-#define LG_NUM TG(_NUMPAD)
 #define LT_LOW LT(_LOWER, KC_ENT)
 #define LT_RAI LT(_RAISE, KC_SPC)
 
 // Mod-Tap Keys
-#define MT_DEL MT(MOD_LGUI | MOD_LALT | MOD_LSFT, KC_DEL)
-#define MT_EQL MT(MOD_LALT | MOD_LSFT, KC_EQL)
+#define MT_DEL MT(MOD_LALT | MOD_LSFT, KC_DEL)
+#define MT_EQL MT(MOD_RSFT, KC_EQL) 
 
 // Layout blocks
-#define _____________________QWERTY_L1______________________ T_TAB, T_Q, KC_W, KC_E, KC_R, KC_T
+#define _____________________QWERTY_L1______________________ T_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T
 #define _____________________QWERTY_L2______________________ T_ESC, KC_A, KC_S, KC_D, KC_F, KC_G
 #define _____________________QWERTY_L3______________________ KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B
 
@@ -98,7 +97,7 @@
 #define _____________________LOWER_R2_______________________ _______________NAV_2______________, K_LOCK, XXXXXXX
 #define _____________________LOWER_R3_______________________ T_RBRC, KC_M, M_TERM, M_CODE, M_XXX1, M_PYNV
 
-#define _____________________ADJUST_L1______________________ M_MAKE, EEP_RST, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+#define _____________________ADJUST_L1______________________ M_MAKE, EE_CLR, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
 
 #if defined(RGB_MATRIX_ENABLE) || defined(RGBLIGHT_ENABLE)
   #define _____________________ADJUST_L2______________________ M_VRSN, M_MALL, RGB_SPI, RGB_SAI, RGB_HUI, RGB_VAI
@@ -130,18 +129,18 @@
 #define __________________________________ _______, _______, _______, _______
 
 #define _____________MOD_LEFT_____________ KC_LALT, T_GUI, KC_LCTL, LT_RAI
-#define _____________MOD_RIGHT____________ LT_LOW, KC_BSPC, MT_DEL, T_CPNU
+#define _____________MOD_RIGHT____________ LT_LOW, KC_BSPC, MT_DEL, T_CPAP
 
 #define _________MEDIA_1_________ KC_BRIU, KC_MPLY, KC_MUTE
-#define _________MEDIA_2_________ KC_BRID, KC_MFFD, KC__VOLUP
-#define _________MEDIA_3_________ XXXXXXX, KC_MRWD, KC__VOLDOWN
+#define _________MEDIA_2_________ KC_BRID, KC_MFFD, KC_VOLU
+#define _________MEDIA_3_________ XXXXXXX, KC_MRWD, KC_VOLD
 
 #if defined(KEYBOARD_crkbd_rev1) || defined(KEYBOARD_kyria_rev1)
   #define ________MOD_LEFT_________ T_GUI, KC_LCTL, LT_RAI
   #define ________MOD_RIGHT________ LT_LOW, KC_BSPC, MT_DEL
 #else
   #define ________MOD_LEFT_________ KC_LALT, T_GUI, KC_LCTL
-  #define ________MOD_RIGHT________ KC_BSPC, MT_DEL, T_CPNU
+  #define ________MOD_RIGHT________ KC_BSPC, MT_DEL, T_CPAP
 #endif
 
 // Layout wrappers

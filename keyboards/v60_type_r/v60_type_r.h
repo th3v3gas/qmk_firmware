@@ -25,7 +25,7 @@ void rgb_init(void);
 void set_rgb_color(uint8_t pin, uint8_t value, uint8_t timer_value);
 
 enum my_keycodes {
-  RGB_RI = SAFE_RANGE,
+  RGB_RI = QK_KB_0,
   RGB_RD,
   RGB_GI,
   RGB_GD,
@@ -88,7 +88,7 @@ enum my_keycodes {
 
   // KBP V60 Type R with ANSI layout
 
-  #define LAYOUT_60_ansi( \
+#define LAYOUT_60_ansi( \
 	       k00, k01, k02, k03, k04, k05, k06, k07, k08, k09, k0a, k0b, k0c,      k0e, \
 	       k10, k11, k12, k13, k14, k15, k16, k17, k18, k19, k1a, k1b, k1c,      k1d, \
 	       k20, k21, k22, k23, k24, k25, k26, k27, k28, k29, k2a, k2b,           k2c, \
