@@ -379,7 +379,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	                  +-----------------+  +-----------------+
 */
 	[_GAME] = LAYOUT( //games!
-	  a KC_DOT,M_PPT,KC_Q,KC_W,KC_E,KC_R,  KC_J,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
+	    KC_DOT,M_PPT,KC_Q,KC_W,KC_E,KC_R,  KC_J,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
     MO(_GFN1),KC_G,KC_A,KC_S,KC_D,KC_F,  KC_H,M_GCHAL,M_GCHTM,M_GCHAT,_______,TD(TD_FNWIN),
       KC_LSFT,KC_B,KC_Z,KC_X,KC_C,KC_V,  KC_N,KC_M,KC_COMM,M_MIC,TD(TD_QGWOX),SC_SENT,
                 KC_LCTL,KC_PAST,KC_SPC,  KC_ESC,MO(_TH),KC_TAB),
