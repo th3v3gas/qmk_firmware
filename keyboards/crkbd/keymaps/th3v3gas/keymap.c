@@ -297,7 +297,7 @@ combo_t key_combos[COMBO_COUNT] = {
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-/*	_QW _QWERTY      BASE LAYER		
+/*	_QW _QWERTY      BASE LAYER
 *	+-----------------------------------+  +-----------------------------------.
 *	| esc |  Q  |  W  |  E  |  R  |  T  |  |  Y  |  U  |  I  |  O  |  P  |Bspce|
 *	|-----------------------------------|  |-----------------------------------+
@@ -314,7 +314,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		   KC_LSFT,KC_Z,KC_X,KC_C,KC_V,KC_B,  KC_N,KC_M,KC_COMM,KC_DOT,TD(TD_QGWOX),KC_SFTENT,
 	  CTL_T(KC_PAST),LT(_TH,KC_SLSH),KC_DEL,  KC_SPC,LT(_TH,KC_LBRC),LALT_T(KC_RBRC)),
 
-/*	_TH _THUMB	
+/*	_TH _THUMB
 *	+-----------------------------------+  +-----------------------------------+
 *	| ` ~ |  1  |  2  |  3  |  4  |  5  |  |  6  |  7  |  8  |  9  |  0  |     |
 *	|-----------------------------------|  |-----------------------------------+
@@ -373,7 +373,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-----------------------------------|  |-----------------------------------+
 *	|shift|  B  |  Z  |  X  |  C  |  V  |  |  N  |  M  |  ,  | MIC |QGWOX|SFTEN|  macro MIC
 *	+-----------------------------------|  |-----------------------------------+
-*	                  | ctr |  *  |space|  | esc | _TH | tab |                    
+*	                  | ctr |  *  |space|  | esc | _TH | tab |
 *	                  +-----------------+  +-----------------+
 */
 	[_GAME] = LAYOUT( //games!
