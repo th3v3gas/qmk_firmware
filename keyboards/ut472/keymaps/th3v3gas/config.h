@@ -1,4 +1,4 @@
-/* Copyright 2020 Vinam Arora <vinam@posteo.de>
+/* Copyright 2018 Carlos Filoteo
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,4 +14,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "0_sixty.h"
+#pragma once
+
+#include "config_common.h"
+
+// place overrides here
+
+#define TAP_CODE_DELAY 50
+#define COMBO_COUNT 2
+#define TAPPING_TERM 200
+#define COMBO_TERM 50
+#define RGBLIGHT_SLEEP
+//#define RGBLIGHT_ANIMATIONS
+#define RGBLIGHT_EFFECT_KNIGHT
+//#define RGBLIGHT_MODE_RAINBOW_MOOD
+//#define RGBLIGHT_EFFECT_SNAKE
+//#define RGBLIGHT_EFFECT_RAINBOW_SWIRL
+//#define RGBLIGHT_EFFECT_MOOD
+#define RGBLIGHT_LED_MAP {6, 7, 0, 1, 2, 3, 4, 5}
+//#define UNICODE_KEY_WINC KC_RALT
