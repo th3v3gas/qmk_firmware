@@ -413,10 +413,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	                  +-----------------+  +-----------------+
 */
 	[_GFO76] = LAYOUT( //fallout 76
-		  a KC_ESC,M_PPT,KC_X,KC_W,KC_E,KC_R,  KC_Y,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
+		    KC_ESC,M_PPT,KC_X,KC_W,KC_E,KC_R,  KC_Y,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
 	 MO(_GFN2),KC_Q,KC_A,KC_S,KC_D,M_BNADE,  KC_H,KC_J,KC_K,KC_L,KC_SCLN,TD(TD_FNWIN),
 	   KC_LSFT,KC_B,KC_Z,KC_1,KC_C,KC_LALT,  KC_F,KC_V,KC_COMM,KC_DOT,TD(TD_QGWOX),SC_SENT,
-		              a KC_TAB,KC_EQL,KC_SPC,  KC_SPC,LT(_TH,KC_LBRC),LALT_T(KC_RBRC)),
+		                KC_TAB,KC_EQL,KC_SPC,  KC_SPC,LT(_TH,KC_LBRC),LALT_T(KC_RBRC)),
 
 /*	_GFN2 _GFUNC2
 *	+-----------------------------------+  +-----------------------------------+
@@ -431,7 +431,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
 	[_GFUNC2] = LAYOUT( //gaming modifier
 		     KC_F3,KC_1,KC_2,KC_3,KC_4,KC_5,  KC_F7,KC_F10,_______,_______,_______,M_GFO76,
-		    ______,KC_6,KC_7,KC_8,KC_9,KC_0,  KC_F8,KC_F11,_______,_______,_______,KC_TRNS,
+		   _______,KC_6,KC_7,KC_8,KC_9,KC_0,  KC_F8,KC_F11,_______,_______,_______,KC_TRNS,
 	KC_P0,KC_M,KC_N,KC_COMM,KC_MINS,KC_F6,  KC_F9,_______,_______,_______,TD(TD_QGWOX),_______,
 						          KC_V,KC_Z,KC_PSLS,  KC_PAUS,KC_RALT,KC_ESC),
 
