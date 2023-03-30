@@ -15,33 +15,29 @@ void matrix_init_user(void) {
 enum layers_keymap {
   _QWERTY = 0,
   _GAME,
-  _GFO76,
+  _GF76,
   _EDIT,
-  _THUMB,
+  _BLWL,
+  _NUMB,
   _FUNCTION,
-  _GFUNC1,
-  _GFUNC2,
+  _FNGM,
+  _FN76,
   _CHAT,
 };
 
 #define _QW _QWERTY
 #define _GM _GAME
-#define _EDT _EDIT
-#define _TH _THUMB
+#define _NM _NUMB
 #define _FN _FUNCTION
-#define _GFN1 _GFUNC1
-#define _GFN2 _GFUNC2
 #define _CH _CHAT
 
 enum custom_keycodes {
-  TD_F1F11, //tap dance
-  TD_F2F12,
-  TD_CAPS,
+  TD_F11TD, //tap dance
+  TD_F12TD,
+  TD_LOCK,
   TD_QGWOX,
   TD_FNWIN,
   M_CHESC = SAFE_RANGE, //macro
-  M_GCHAL,
-  M_GCHTM,
   M_GCHAT,
   M_DSCEXT,
   M_EFIND,
@@ -50,13 +46,14 @@ enum custom_keycodes {
   M_BLLF,
   M_BLSLD,
   M_BLADS,
-  M_BNADE,
-  M_EDT,
-  M_GFO76,
+  M_76NADE,
+  M_EDIT,
+  M_GF76,
   M_VOL,
   M_MIC,
   M_CHENT,
   M_PPT,
+  M_BLWL,
 };
 
 //tap dance
@@ -143,9 +140,9 @@ void td03_reset (tap_dance_state_t *state, void *user_data) {
   }
 }
 tap_dance_action_t tap_dance_actions[] = {
-  [TD_F1F11] = ACTION_TAP_DANCE_DOUBLE(KC_F1, KC_F11),
-  [TD_F2F12] = ACTION_TAP_DANCE_DOUBLE(KC_F2, KC_F12),
-  [TD_CAPS] = ACTION_TAP_DANCE_DOUBLE(_______, KC_CAPS),
+  [TD_F11TD] = ACTION_TAP_DANCE_DOUBLE(KC_F9, KC_F11),
+  [TD_F12TD] = ACTION_TAP_DANCE_DOUBLE(KC_F10, KC_F12),
+  [TD_LOCK] = ACTION_TAP_DANCE_DOUBLE(KC_CAPS, KC_NUM),
   [TD_QGWOX] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td01_finished, td01_reset),
   [TD_FNWIN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td03_finished, td03_reset),
 };
@@ -156,28 +153,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		case M_CHESC: //close _CHAT, switch to _GAME
 			if (record->event.pressed) {
         layer_move(_GM);
-        send_string(SS_TAP(X_ESC));
+        send_string(SS_TAP(X_ESC)); //use this format for tapping a key in a macro
 			};
       return false;
-		case M_GCHAL: //_CHAT Y
+		case M_GCHAT: //_CHAT Y   switch to qwerty layout for game chat
 			if (record->event.pressed) {
         layer_move(_QW);
         layer_on(_CH);
         send_string(SS_TAP(X_Y));
-			};
-      return false;
-		case M_GCHTM: //_CHAT K
-			if (record->event.pressed) {
-        layer_move(_QW);
-        layer_on(_CH);
-        send_string(SS_TAP(X_K));
-			};
-      return false;
-		case M_GCHAT: //_CHAT
-			if (record->event.pressed) {
-        layer_move(_QW);
-        layer_on(_CH);
-        send_string(SS_TAP(X_L));
 			};
       return false;
 		case M_EFIND: //_EDIT find
@@ -186,7 +169,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         layer_move(_QW);
 			};
       return false;
-		case M_BLRUN: //borderlands run forward
+		case M_BLRUN: //border/wonderlands run forward
 			if (record->event.pressed) {
         register_code(KC_W);
         send_string(SS_TAP(X_P5));
@@ -194,7 +177,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         unregister_code(KC_W);
 			};
       return false;
-		case M_BLRT: //borderlands run right
+		case M_BLRT: //border/wonderlands run right
 			if (record->event.pressed) {
         register_code(KC_D);
         send_string(SS_TAP(X_P5));
@@ -202,7 +185,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         unregister_code(KC_D);
 			};
       return false;
-		case M_BLLF: //borderlands run left
+		case M_BLLF: //border/wonderlands run left
 			if (record->event.pressed) {
         register_code(KC_A);
         send_string(SS_TAP(X_P5));
@@ -210,17 +193,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         unregister_code(KC_A);
 			};
       return false;
-		case M_BLSLD: //borderlands slide
+		case M_BLSLD: //border/wonderlands slide
 			if (record->event.pressed) {
-        layer_off(_GFO76);
+        layer_move(_GAME);
         register_code(KC_B);
       } else {
-        layer_on(_GFO76);
+        layer_move(_BLWL);
         unregister_code(KC_B);
         send_string(SS_TAP(X_P5));
 			};
       return false;
-		case M_BLADS: //borderlands aim down sight
+		case M_BLADS: //border/wonderlands aim down sight
 			if (record->event.pressed) {
         register_code(KC_SPC);
       } else {
@@ -228,7 +211,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         send_string(SS_TAP(X_P5));
 			};
       return false;
-		case M_BNADE: //fo76 grenade
+		case M_76NADE: //fo76 grenade
 			if (record->event.pressed) {
         register_code(KC_LALT);
         wait_ms(600);
@@ -236,32 +219,38 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         unregister_code(KC_LALT);
 			};
       return false;
-		case M_EDT: //swap to _EDIT
+		case M_EDIT: //swap to _EDIT
 			if (record->event.pressed) {
-        layer_invert(_EDT);
+        layer_invert(_EDIT);
 			};
       return false;
-		case M_GFO76: //swap to Fallout 76
+		case M_GF76: //swap to Fallout 76
 			if (record->event.pressed) {
         layer_clear();
-        layer_move(_GFO76);
+        layer_move(_GF76);
 			};
       return false;
-		case M_VOL: //ear trumpet
+		case M_BLWL: //swap to border/wonderlands
+			if (record->event.pressed) {
+        layer_clear();
+        layer_move(_BLWL);
+			};
+      return false;
+		case M_VOL: //ear trumpet hotkey
 			if (record->event.pressed) {
         register_code(KC_RCTL);
         send_string(SS_TAP(X_F23));
         unregister_code(KC_RCTL);
 			};
       return false;
-		case M_MIC: //mute mic
+		case M_MIC: //mute mic hotkey
 			if (record->event.pressed) {
         register_code(KC_RSFT);
         send_string(SS_TAP(X_F23));
         unregister_code(KC_RSFT);
 			};
       return false;
-		case M_CHENT: //enter, switch to _GAME
+		case M_CHENT: //enter, switch to _GAME  return from _CHAT
 			if (record->event.pressed) {
         layer_move(_GM);
         send_string(SS_TAP(X_ENT));
@@ -270,13 +259,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		case M_PPT:  //obs ptt
 			if (record->event.pressed) {
         register_code(KC_LCTL);
-        tap_code(KC_F17);
+        tap_code(KC_F17); //hotkey this (ctl+f17) in obs, enable voice
         unregister_code(KC_LCTL);
         register_code(KC_T);
        } else {
         unregister_code(KC_T);
         register_code(KC_LCTL);
-        tap_code(KC_F18);
+        tap_code(KC_F18); //hotkey this (ctl+f18) in obs, disable voice
         unregister_code(KC_LCTL);
 			};
       return false;
@@ -288,137 +277,174 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 //rules.mk (COMBO_ENABLE = yes)
 //config.h (#define COMBO_COUNT 2) Change combo count as needed (#define COMBO_TERM 50) combo window ~50
 enum combos {
-  co_qm, //qmark
-  co_ep //exlm
+  co_qm, //question mark
+  co_ep, //exclamation point
+  co_es //escape
 };
-const uint16_t PROGMEM qm_combo[] = {KC_COMM, KC_DOT, COMBO_END}; //qmark
-const uint16_t PROGMEM ex_combo[] = {KC_M, KC_COMM, COMBO_END}; //exlm
+const uint16_t PROGMEM qm_combo[] = {KC_COMM, KC_DOT, COMBO_END};//?
+const uint16_t PROGMEM ex_combo[] = {KC_M, KC_COMM, COMBO_END};//!
+const uint16_t PROGMEM es_combo[] = {KC_Z, KC_X, COMBO_END};//esc
 combo_t key_combos[COMBO_COUNT] = {
-  [co_qm] = COMBO(qm_combo, KC_QUES), //qmark
-  [co_ep] = COMBO(ex_combo, KC_EXLM), //exlm
+  [co_qm] = COMBO(qm_combo, KC_QUES),//?
+  [co_ep] = COMBO(ex_combo, KC_EXLM),//!
+  [co_es] = COMBO(es_combo, KC_ESC),//esc
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-/*	_QW _QWERTY      BASE LAYER
+/*	_QW _QWERTY      BASE LAYER  it's qwerty!
 *	+-----------------------------------+  +-----------------------------------.
-*	| esc |  Q  |  W  |  E  |  R  |  T  |  |  Y  |  U  |  I  |  O  |  P  |Bspce|
+*	| esc |  q  |  w  |  e  |  r  |  t  |  |  y  |  u  |  i  |  o  |  p  |Bspce|
 *	|-----------------------------------|  |-----------------------------------+
-*	|tabFN|  A  |  S  |  D  |  F  |  G  |  |  H  |  J  |  K  |  L  |  ;  |FNWIN|  tap dance FNWIN
+*	|tabFN|  a  |  s  |  d  |  f  |  g  |  |  h  |  j  |  k  |  l  |  ;  |FNWIN|  tap dance FNWIN
 *	|-----------------------------------|  |-----------------------------------+
-*	|shift|  Z  |  X  |  C  |  V  |  B  |  |  N  |M(!) |,(!?)|.(?) |QGWOX|SFTEN|  combos (M+,)=! (,+.)=?; tap dance QGWOX
+*	|shift|  z  |  x  |  c  |  v  |  b  |  |  n  |m(!) |,(!?)|.(?) |QGWOX|sfent|  combos (M+,)=! (,+.)=?; tap dance QGWOX
 *	+-----------------------------------|  |-----------------------------------+
-*	                  |ctl *|_TH /| del |  |space|_TH [|alt ]|
+*	                  |ctl *|_NM /| del |  |space|_NM [|alt ]|
 *	                  +-----------------+  +-----------------+
 */
-	[_QWERTY] = LAYOUT( //qwerty
+	[_QWERTY] = LAYOUT(
           KC_ESC,KC_Q,KC_W,KC_E,KC_R,KC_T,  KC_Y,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
   LT(_FN,KC_TAB),KC_A,KC_S,KC_D,KC_F,KC_G,  KC_H,KC_J,KC_K,KC_L,KC_SCLN,TD(TD_FNWIN),
          KC_LSFT,KC_Z,KC_X,KC_C,KC_V,KC_B,  KC_N,KC_M,KC_COMM,KC_DOT,TD(TD_QGWOX),SC_SENT,
-    CTL_T(KC_PAST),LT(_TH,KC_SLSH),KC_DEL,  KC_SPC,LT(_TH,KC_LBRC),LALT_T(KC_RBRC)),
+    CTL_T(KC_PAST),LT(_NM,KC_SLSH),KC_DEL,  KC_SPC,LT(_NM,KC_LBRC),LALT_T(KC_RBRC)),
 
-/*	_TH _THUMB
+/*	_NM _NUMB                    number row, nav cluster
 *	+-----------------------------------+  +-----------------------------------+
 *	| ` ~ |  1  |  2  |  3  |  4  |  5  |  |  6  |  7  |  8  |  9  |  0  |     |
 *	|-----------------------------------|  |-----------------------------------+
-*	|     |     |home |pgdn |pgup | end |  |left |down | up  |right|     |  \| |
+*	|  -  |  =  |home |pgdn |pgup | end |  |left |down | up  |right|     |  \| |
 *	|-----------------------------------|  |-----------------------------------+
-*	|     |     |     |     |     |     |  |     |     |     |  .  |QGWOX|     |
+*	|     |     |     |     |     |     |  |     |     |  ,  |  .  |QGWOX|     |
 *	+-----------------------------------|  |-----------------------------------+
-*	                  |  +  |  -  |space|  |  _  |  (  |  )  |
+*	                  |  +  |  -  | del |  |space|  (  |  )  |
 *	                  +-----------------+  +-----------------+
 */
-	[_THUMB] = LAYOUT( //modifier
+	[_NUMB] = LAYOUT(
                   KC_GRV,KC_1,KC_2,KC_3,KC_4,KC_5,  KC_6,KC_7,KC_8,KC_9,KC_0,_______,
-   _______,XXXXXXX,KC_HOME,KC_PGDN,KC_PGUP,KC_END,  KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,XXXXXXX,KC_BSLS,
-  _______,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,KC_DOT,_______,_______,
-                           KC_PPLS,KC_MINS,KC_SPC,  KC_UNDS,KC_LPRN,KC_RPRN),
+    KC_MINS,KC_EQL,KC_HOME,KC_PGDN,KC_PGUP,KC_END,  KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,XXXXXXX,KC_BSLS,
+  _______,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,KC_COMM,KC_DOT,_______,_______,
+                           KC_PPLS,KC_MINS,KC_DEL,  KC_SPC,KC_LPRN,KC_RPRN),
 
-/*	_FN _FUNCTION
+/*	_FN _FUNCTION                function row, number pad
 *	+-----------------------------------+  +-----------------------------------+
-*	|(tsk)|F1F11|F2F12| F3  | F4  | F5  |  | F6  | F7  | F8  | F9  | F10 |PrtSc|  (tsk) = task manager; tap dance F1F11, F2F12
+*	|(tsk)| f3  | f2  | F3  | F4  | F5  |  | F6  | F7  | F8  |F11TD|F12TD|prtsc|  (tsk) = task manager; tap dance F11TD, F12TD
 *	|-----------------------------------|  |-----------------------------------+
-*	|CAPS | n1  | n2  | n3  | n4  | n5  |  | n6  | n7  | n8  | n9  | n0  |     |  tap dance TD_CAPS
+*	|     | n1  | n2  | n3  | n4  | n5  |  | n6  | n7  | n8  | n9  | n0  |     |
 *	|-----------------------------------|  |-----------------------------------+
-*	|     |     |     |     |     |     |  |     |     | VOL | MIC |QGWOX|rsft |  macro VOL, MIC
+*	|     |     |     |     |     |     |  |LOCK |     | VOL | MIC |QGWOX|sfent|  macro VOL, MIC, tap dance TD_LOCK
 *	+-----------------------------------|  |-----------------------------------+
 *	                  |  @  |  =  |space|  |  _  |     |     |
 *	                  +-----------------+  +-----------------+
 */
-	[_FUNCTION] = LAYOUT( //modifier
-  C(S(KC_ESC)),TD(TD_F1F11),TD(TD_F2F12),KC_F3,KC_F4,KC_F5,  KC_F6,KC_F7,KC_F8,KC_F9,KC_F10,KC_PSCR,
-                 TD(TD_CAPS),KC_P1,KC_P2,KC_P3,KC_P4,KC_P5,  KC_P6,KC_P7,KC_P8,KC_P9,KC_P0,M_EDT,
-           _______,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,M_VOL,M_MIC,_______,KC_RSFT,
-                                       KC_AT,KC_EQL,KC_SPC,  KC_UNDS,_______,_______),
+	[_FUNCTION] = LAYOUT(
+       C(S(KC_ESC)),KC_F1,KC_F2,KC_F3,KC_F4,KC_F5,  KC_F6,KC_F7,KC_F8,TD(TD_F11TD),TD(TD_F12TD),KC_PSCR,
+            XXXXXXX,KC_P1,KC_P2,KC_P3,KC_P4,KC_P5,  KC_P6,KC_P7,KC_P8,KC_P9,KC_P0,M_EDIT,
+  _______,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  TD(TD_LOCK),XXXXXXX,M_VOL,M_MIC,_______,_______,
+                              KC_AT,KC_EQL,KC_SPC,  KC_UNDS,KC_RALT,KC_RCTL),
 
-/*	_EDT _EDIT
+/*	_EDIT                        for editing (stealing code)
 *	+-----------------------------------+  +-----------------------------------+
-*	|     |  [  |  ]  |  (  |  )  |bspce|  |redo |     |     |     |     |     |
+*	|     |  [  |  ]  |  (  |  )  |bspce|  |redo |     |     |     |     | _QW |
 *	|-----------------------------------|  |-----------------------------------+
-*	|     |slall|save |     |find |  /  |  |left |down | up  |right|     |     |
+*	|     |slall|save |     |find |  /  |  |     |     |     |  ;  |  '  |  \  |
 *	|-----------------------------------|  |-----------------------------------+
-*	|     |undo | cut |copy |paste|  *  |  |home |PGDN |PGUP | end |QGWOX|     |
+*	|     |undo | cut |copy |paste|  *  |  |pgup |pgdn |     |     |QGWOX|     |
 *	+-----------------------------------|  |-----------------------------------+
 *	                  |enter|space| del |  |     |     |     |
 *	                  +-----------------+  +-----------------+
 */
-	[_EDIT] = LAYOUT( //edit
+	[_EDIT] = LAYOUT(
   _______,KC_LBRC,KC_RBRC,KC_LPRN,KC_RPRN,KC_BSPC,  C(KC_Y),XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,TO(_QW),
-  _______,C(KC_A),C(KC_S),XXXXXXX,M_EFIND,KC_PSLS,  KC_LEFT,KC_DOWN,KC_UP,KC_RGHT,XXXXXXX,_______,
-  _______,C(KC_Z),C(KC_X),C(KC_C),C(KC_V),KC_PAST,  KC_HOME,KC_PGDN,KC_PGUP,KC_END,_______,_______,
-                             KC_ENT,KC_SPC,KC_DEL,  _______,KC_TRNS,_______),
+  _______,C(KC_A),C(KC_S),XXXXXXX,M_EFIND,KC_SLSH,  XXXXXXX,XXXXXXX,XXXXXXX,KC_SCLN,KC_QUOT,KC_BSLS,
+  _______,C(KC_Z),C(KC_X),C(KC_C),C(KC_V),KC_PAST,  KC_PGDN,KC_PGUP,_______,_______,_______,_______,
+                             KC_ENT,KC_SPC,KC_DEL,  XXXXXXX,_______,_______),
 
-/*	_GM _GAME		BASE LAYER
+/*	_GM _GAME        BASE LAYER  gaming layout for humans
 *	+-----------------------------------+  +-----------------------------------+
-*	|  .  | PTT |  Q  |  W  |  E  |  R  |  |  J  |  U  |  I  |  O  |  P  |Bspce|  macro PTT
+*	|  .  | PTT |  q  |  w  |  e  |  r  |  |  y  |  u  |  i  |  o  |  p  |bspce|  macro PTT
 *	|-----------------------------------|  |-----------------------------------+
-*	| _GF |  G  |  A  |  S  |  D  |  F  |  |  H  |GCHAL|GCHTM|GCHAT|  ;  |FNWIN|  macro GCHAL, GCHTM, GCHAT; tap dance FNWIN
+*	|_FNGM|  g  |  a  |  s  |  d  |  f  |  |  h  |GCHAT|  k  |  l  |  ;  |FNWIN|  macro GCHAT; tap dance FNWIN
 *	|-----------------------------------|  |-----------------------------------+
-*	|shift|  B  |  Z  |  X  |  C  |  V  |  |  N  |  M  |  ,  | MIC |QGWOX|SFTEN|  macro MIC
+*	|shift|  b  |  z  |  x  |  c  |  v  |  |  n  |  m  | VOL | MIC |QGWOX|sften|  macro VOL, MIC
 *	+-----------------------------------|  |-----------------------------------+
-*	                  | ctr |  *  |space|  | esc | _TH | tab |
+*	                  | ctr | alt |space|  |pause|_NM [|alt ]|
 *	                  +-----------------+  +-----------------+
 */
-	[_GAME] = LAYOUT( //games!
+	[_GAME] = LAYOUT(
     KC_DOT,M_PPT,KC_Q,KC_W,KC_E,KC_R,  KC_J,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
-  MO(_GFN1),KC_G,KC_A,KC_S,KC_D,KC_F,  KC_H,M_GCHAL,M_GCHTM,M_GCHAT,_______,TD(TD_FNWIN),
-    KC_LSFT,KC_B,KC_Z,KC_X,KC_C,KC_V,  KC_N,KC_M,KC_COMM,M_MIC,TD(TD_QGWOX),SC_SENT,
-              KC_LCTL,KC_PAST,KC_SPC,  KC_ESC,MO(_TH),KC_TAB),
+  MO(_FNGM),KC_G,KC_A,KC_S,KC_D,KC_F,  KC_H,M_GCHAT,KC_K,KC_L,KC_SCLN,TD(TD_FNWIN),
+    KC_LSFT,KC_B,KC_Z,KC_X,KC_C,KC_V,  KC_N,KC_M,M_VOL,M_MIC,TD(TD_QGWOX),SC_SENT,
+              KC_LCTL,KC_LALT,KC_SPC,  KC_PAUS,LT(_NM,KC_LBRC),LALT_T(KC_RBRC)),
 
-/*	_GFN1 _GFUNC1
+/*	_FNGM                        gaming number and function
 *	+-----------------------------------+  +-----------------------------------+
-*	| tab | f1  |  7  |  8  |  9  | f4  |  |     |     |     |     |     |     |
+*	| tab |  1  |  2  |  3  |  4  |  5  |  | f4  | f5  | f6  |GF76 |BLWL |     |  macro GF76, BLWL
 *	|-----------------------------------|  |-----------------------------------+
-*	|     | f2  |  4  |  5  |  6  | f5  |  | F11 |     |     |     |     |     |
+*	|     |  6  |  7  |  8  |  9  |  0  |  | f7  | f8  | f9  |     |     |     |
 *	|-----------------------------------|  |-----------------------------------+
-*	| ctl | f3  |  1  |  2  |  3  | f6  |  | F12 |     |     |     |QGWOX|     |
+*	|home | f1  | f2  | f3  |  -  |  =  |  | f10 | f11 | f12 |     |QGWOX|     |
 *	+-----------------------------------|  |-----------------------------------+
-*	                  |  0  |  /  |  ,  |  |pause| alt | esc |
+*	                  |  ;  |  '  |  ,  |  | end | alt | esc |
 *	                  +-----------------+  +-----------------+
 */
-	[_GFUNC1] = LAYOUT( //gaming modifier
-  KC_LALT,KC_F1,KC_7,KC_8,KC_9,KC_F4,  KC_F7,KC_F10,_______,_______,_______,M_GFO76,
-  _______,KC_F2,KC_4,KC_5,KC_6,KC_F5,  KC_F8,KC_F11,_______,_______,_______,KC_TRNS,
-  KC_LCTL,KC_F3,KC_1,KC_2,KC_3,KC_F6,  KC_F9,KC_F12,_______,_______,KC_TRNS,_______,
-                KC_0,KC_PSLS,KC_COMM,  KC_PAUS,KC_RALT,KC_ESC),
+	[_FNGM] = LAYOUT(
+           KC_TAB,KC_1,KC_2,KC_3,KC_4,KC_5,  KC_F4,KC_F5,KC_F6,M_GF76,M_BLWL,XXXXXXX,
+          _______,KC_6,KC_7,KC_8,KC_9,KC_0,  KC_F7,KC_F8,KC_F9,XXXXXXX,XXXXXXX,XXXXXXX,
+  KC_HOME,KC_F1,KC_F2,KC_F3,KC_MINS,KC_EQL,  KC_F10,KC_F11,KC_F12,XXXXXXX,XXXXXXX,XXXXXXX,
+                   KC_SCLN,KC_QUOT,KC_COMM,  KC_END,KC_TAB,KC_ESC),
 
-/*	_GFO76			BASE LAYER
+/*	_GF76            BASE LAYER  fallout 76
 *	+-----------------------------------+  +-----------------------------------+
-*	| esc |  t  |  x  |  w  |  e  |  r  |  |  y  |  u  |  i  |  o  |  p  |bspce|
+*	| esc | PPT |  x  |  w  |  e  |  r  |  |  y  |  u  |  i  |  o  |  p  |bspce|
 *	|-----------------------------------|  |-----------------------------------+
-*	|     |  q  |  a  |  s  |  d  |nade |  |  h  |  j  |  k  |  l  |  ;  |FNWIN|
+*	|_FN76|  q  |  a  |  s  |  d  |nade |  |  h  |  j  |  k  |  l  |  ;  |FNWIN|
 *	|-----------------------------------|  |-----------------------------------+
-*	| ctl |  b  |  z  |  1  |  c  | alt |  |  f  |  v  |  ,  |  .  |QGWOX|SFTEN|
+*	|shift|  b  |  z  |  1  |  c  | alt |  |  f  |  v  | VOL | MIC |QGWOX|sften|
 *	+-----------------------------------|  |-----------------------------------+
-*	                  | tab |  =  |space|  |space| _TH | esc |
+*	                  | tab |  =  |space|  |pause|_NM [|alt ]|
 *	                  +-----------------+  +-----------------+
 */
-	[_GFO76] = LAYOUT( //fallout 76
-       KC_ESC,M_PPT,KC_X,KC_W,KC_E,KC_R,  KC_Y,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
-  MO(_GFN2),KC_Q,KC_A,KC_S,KC_D,M_BNADE,  KC_H,KC_J,KC_K,KC_L,KC_SCLN,TD(TD_FNWIN),
-    KC_LSFT,KC_B,KC_Z,KC_1,KC_C,KC_LALT,  KC_F,KC_V,KC_COMM,KC_DOT,TD(TD_QGWOX),SC_SENT,
-                   KC_TAB,KC_EQL,KC_SPC,  KC_SPC,LT(_TH,KC_LBRC),LALT_T(KC_RBRC)),
+	[_GF76] = LAYOUT(
+        KC_ESC,M_PPT,KC_X,KC_W,KC_E,KC_R,  KC_Y,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
+  MO(_FN76),KC_Q,KC_A,KC_S,KC_D,M_76NADE,  KC_H,KC_J,KC_K,KC_L,KC_SCLN,TD(TD_FNWIN),
+     KC_LSFT,KC_B,KC_Z,KC_1,KC_C,KC_LALT,  KC_F,KC_V,M_VOL,M_MIC,TD(TD_QGWOX),SC_SENT,
+                    KC_TAB,KC_EQL,KC_SPC,  KC_PAUS,LT(_NM,KC_LBRC),LALT_T(KC_RBRC)),
 
-/*	_GFN2 _GFUNC2
+/*	_FN76                        fallout 76 numbers and function
+*	+-----------------------------------+  +-----------------------------------+
+*	| f3  |  1  |  2  |  3  |  4  |  5  |  | f4  | f5  | f6  |GF76 |BLWL |     |  macro GF76, BLWL
+*	|-----------------------------------|  |-----------------------------------+
+*	|     |  6  |  7  |  8  |  9  |  0  |  | f7  | f8  | f9  |     |     |     |
+*	|-----------------------------------|  |-----------------------------------+
+*	| n0  |  m  |  n  |  ,  |  -  | f6  |  | f10 | f11 | f12 |     |QGWOX|     |
+*	+-----------------------------------|  |-----------------------------------+
+*	                  |  v  |  z  |  +  |  | end | alt | esc |
+*	                  +-----------------+  +-----------------+
+*/
+	[_FN76] = LAYOUT(
+         KC_F3,KC_1,KC_2,KC_3,KC_4,KC_5,  KC_F4,KC_F5,KC_F6,M_GF76,M_BLWL,XXXXXXX,
+       _______,KC_6,KC_7,KC_8,KC_9,KC_0,  KC_F7,KC_F8,KC_F9,XXXXXXX,XXXXXXX,XXXXXXX,
+  KC_P0,KC_M,KC_N,KC_COMM,KC_MINS,KC_F6,  KC_F10,KC_F11,KC_F12,XXXXXXX,XXXXXXX,XXXXXXX,
+                      KC_V,KC_Z,KC_PSLS,  KC_END,KC_TAB,KC_ESC),
+
+/*  _BLWL            BASE LAYER  border/wonderlands
+*	+-----------------------------------+  +-----------------------------------+
+*	|  .  | PPT |  q  |BLRUN|  e  |  r  |  |  y  |  u  |  i  |  o  |  p  |bspce|  macro M_BL (various macros)
+*	|-----------------------------------|  |-----------------------------------+
+*	|_FNGM|  g  |BLLF |  s  | BLRT|  f  |  |  h  |  j  |  k  |  l  |  ;  |FNWIN|
+*	|-----------------------------------|  |-----------------------------------+
+*	|shift|BLSLD|  z  |  x  |  c  |  v  |  |  n  |  m  | VOL | MIC |QGWOX|sften|
+*	+-----------------------------------|  |-----------------------------------+
+*	                  | ctr | alt |BLADS|  |pause|_NM [|alt ]|
+*	                  +-----------------+  +-----------------+
+*/
+  [_BLWL] = LAYOUT(
+     KC_DOT,M_PPT,KC_Q,M_BLRUN,KC_E,KC_R,  KC_Y,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
+  MO(_FNGM),KC_G,M_BLLF,KC_S,M_BLRT,KC_F,  KC_H,KC_J,KC_K,KC_L,KC_SCLN,TD(TD_FNWIN),
+     KC_LSFT,M_BLSLD,KC_Z,KC_X,KC_C,KC_V,  KC_N,KC_M,M_VOL,M_MIC,TD(TD_QGWOX),SC_SENT,
+                 KC_LCTL,KC_LALT,M_BLADS,  KC_PAUS,LT(_NM,KC_LBRC),LALT_T(KC_RBRC)),
+
+/*  _CH _CHAT                    qwerty overlay for game chat GCHAT
 *	+-----------------------------------+  +-----------------------------------+
 *	|     |     |     |     |     |     |  |     |     |     |     |     |     |
 *	|-----------------------------------|  |-----------------------------------+
@@ -426,42 +452,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	|-----------------------------------|  |-----------------------------------+
 *	|     |     |     |     |     |     |  |     |     |     |     |     |     |
 *	+-----------------------------------|  |-----------------------------------+
-*	                  |     |     |     |  |     |     |     |
+*	blank layout      |     |     |     |  |     |     |     |
 *	                  +-----------------+  +-----------------+
 */
-	[_GFUNC2] = LAYOUT( //gaming modifier
-         KC_F3,KC_1,KC_2,KC_3,KC_4,KC_5,  KC_F7,KC_F10,_______,_______,_______,M_GFO76,
-       _______,KC_6,KC_7,KC_8,KC_9,KC_0,  KC_F8,KC_F11,_______,_______,_______,KC_TRNS,
-  KC_P0,KC_M,KC_N,KC_COMM,KC_MINS,KC_F6,  KC_F9,_______,_______,_______,TD(TD_QGWOX),_______,
-                      KC_V,KC_Z,KC_PSLS,  KC_PAUS,KC_RALT,KC_ESC),
-
-/*	 galt
-*	+-----------------------------------+  +-----------------------------------+
-*	|     |     |     |     |     |     |  |     |     |     |     |     |     |
-*	|-----------------------------------|  |-----------------------------------+
-*	|     |     |     |     |     |     |  |     |     |     |     |     |     |
-*	|-----------------------------------|  |-----------------------------------+
-*	|     |     |     |     |     |     |  |     |     |     |     |     |     |
-*	+-----------------------------------|  |-----------------------------------+
-*	                  |     |     |     |  |     |     |     |
-*	                  +-----------------+  +-----------------+
-
-	[_GFO76] = LAYOUT( //borderlands
-    _______,_______,_______,M_BLRUN,_______,_______,  KC_J,_______,_______,_______,TG(_GFO76),_______,
-		MO(_GFN1),_______,M_BLLF,_______,M_BLRT,_______,  _______,M_GCHAL,KC_K,KC_L,_______,_______,
-		 _______,M_BLSLD,_______,_______,_______,KC_TAB,  _______,_______,_______,_______,KC_TRNS,_______,
-		                        _______,_______,M_BLADS,  _______,_______,_______),
-*/
-
-//	_CH _CHAT
-	[_CHAT] = LAYOUT( //gaming chat
+	[_CHAT] = LAYOUT(
   M_CHESC,_______,_______,_______,_______,_______,  _______,_______,_______,_______,_______,_______,
   _______,_______,_______,_______,_______,_______,  _______,_______,_______,_______,_______,_______,
   _______,_______,_______,_______,_______,_______,  _______,_______,_______,_______,KC_TRNS,M_CHENT,
-                          _______,_______,_______,  _______,_______,M_DSCEXT),
+                          _______,_______,_______,  _______,_______,_______),
 };
 
-#ifdef OLED_DRIVER_ENABLE
+
+/*
+#ifdef OLED_ENABLE
 char keylog_str[5] = {};
 uint16_t oled_timer;
 uint16_t log_timer = 0;
@@ -486,23 +489,20 @@ void render_default_layer_state(void) {
         case _GM:
             oled_write_P(PSTR("_gams\n"), false);
             break;
-        case _GFO76:
+        case _GF76:
             oled_write_P(PSTR("Fallout 76\n"), false);
             break;
-        case _EDT:
+        case _EDIT:
             oled_write_P(PSTR("_EDIT\n"), false);
             break;
-        case _TH:
+        case _NM:
             oled_write_P(PSTR("_butts\n"), false);
             break;
         case _FN:
             oled_write_P(PSTR("_funk\n"), false);
             break;
-        case _GFN1:
+        case _FNGM:
             oled_write_P(PSTR("_GFUNC\n"), false);
-            break;
-        case _GFN2:
-            oled_write_P(PSTR("_GFUN2\n"), false);
             break;
         case _CH:
             oled_write_P(PSTR("_CHAT\n"), false);
@@ -532,7 +532,7 @@ void render_status_main(void) {
     render_keylock_status(host_keyboard_leds());
     render_mod_status(get_mods() | get_oneshot_mods());
 }
-void render_status_secondary(void) {
+d render_status_secondary(void) {
     oled_write("Bite me.", false);
 }
 void oled_task_user(void) {
@@ -547,3 +547,4 @@ void oled_task_user(void) {
     }
 }
 #endif
+*/
