@@ -39,7 +39,6 @@ enum custom_keycodes {
   TD_FNWIN,
   M_CHESC = SAFE_RANGE, //macro
   M_GCHAT,
-  M_DSCEXT,
   M_EFIND,
   M_BLRUN,
   M_BLRT,
@@ -156,11 +155,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         send_string(SS_TAP(X_ESC)); //use this format for tapping a key in a macro
 			};
       return false;
-		case M_GCHAT: //KC_Y, switch to qwerty for game chat
+		case M_GCHAT: //KC_enter, switch to qwerty for game chat
 			if (record->event.pressed) {
         layer_move(_QW);
         layer_on(_CH);
-        send_string(SS_TAP(X_Y));
+        send_string(SS_TAP(X_ENT));
 			};
       return false;
 		case M_EFIND: //ctlfind, switch to qwerty
@@ -365,17 +364,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	+-----------------------------------+  +-----------------------------------+
 *	|  .  | PTT |  q  |  w  |  e  |  r  |  |  y  |  u  |  i  |  o  |  p  |bspce|  macro PTT
 *	|-----------------------------------|  |-----------------------------------+
-*	|_FNGM|  g  |  a  |  s  |  d  |  f  |  |  h  |GCHAT|  k  |  l  |  ;  |FNWIN|  macro GCHAT;
+*	|_FNGM|  g  |  a  |  s  |  d  |  f  |  |  h  |  J  |  k  |  l  |  ;  |FNWIN|
 *	|-----------------------------------|  |-----------------------------------+
-*	|shift|  b  |  z  |  x  |  c  |  v  |  |  n  |  m  | VOL | MIC |QGWOX|sften|
+*	|shift|  b  |  z  |  x  |  c  |  v  |  |  n  |  m  | VOL | MIC |QGWOX|GCHAT|  macro GCHAT
 *	+-----------------------------------|  |-----------------------------------+
 *	                  | ctr | alt |space|  |pause|_NM [|alt ]|
 *	                  +-----------------+  +-----------------+
 */
 	[_GAME] = LAYOUT(
     KC_DOT,M_PPT,KC_Q,KC_W,KC_E,KC_R,  KC_J,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
-  MO(_FNGM),KC_G,KC_A,KC_S,KC_D,KC_F,  KC_H,M_GCHAT,KC_K,KC_L,KC_SCLN,TD(TD_FNWIN),
-    KC_LSFT,KC_B,KC_Z,KC_X,KC_C,KC_V,  KC_N,KC_M,M_VOL,M_MIC,TD(TD_QGWOX),SC_SENT,
+  MO(_FNGM),KC_G,KC_A,KC_S,KC_D,KC_F,  KC_H,KC_J,KC_K,KC_L,KC_SCLN,TD(TD_FNWIN),
+    KC_LSFT,KC_B,KC_Z,KC_X,KC_C,KC_V,  KC_N,KC_M,M_VOL,M_MIC,TD(TD_QGWOX),M_GCHAT,
               KC_LCTL,KC_LALT,KC_SPC,  KC_PAUS,LT(_NM,KC_LBRC),LALT_T(KC_RBRC)),
 
 /*	_FNGM                    gaming number and function
@@ -463,89 +462,3 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______,_______,_______,_______,_______,_______,  _______,_______,_______,_______,_______,M_CHENT,
                           _______,_______,_______,  _______,_______,_______),
 };
-
-/*
-#ifdef OLED_ENABLE
-char keylog_str[5] = {};
-uint16_t oled_timer;
-uint16_t log_timer = 0;
-void update_log(void) {
-    if (timer_elapsed(log_timer) > 750) {
-        //add_keylog(0);
-    }
-}
-bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed) {
-        //add_keylog(keycode);
-        oled_timer = timer_read();
-    }
-    return true;
-}
-void render_default_layer_state(void) {
-    oled_write("Layer:", false);
-    switch (get_highest_layer(layer_state)) {
-        case _QW:
-            oled_write_P(PSTR("_qwerty\n"), false);
-            break;
-        case _GM:
-            oled_write_P(PSTR("_gams\n"), false);
-            break;
-        case _GF76:
-            oled_write_P(PSTR("Fallout 76\n"), false);
-            break;
-        case _EDIT:
-            oled_write_P(PSTR("_EDIT\n"), false);
-            break;
-        case _NM:
-            oled_write_P(PSTR("_butts\n"), false);
-            break;
-        case _FN:
-            oled_write_P(PSTR("_funk\n"), false);
-            break;
-        case _FNGM:
-            oled_write_P(PSTR("_GFUNC\n"), false);
-            break;
-        case _CH:
-            oled_write_P(PSTR("_CHAT\n"), false);
-            break;
-    }
-}
-void render_keylock_status(uint8_t led_usb_state) {
-    oled_write_P(PSTR("Lock: "), false);
-    oled_write_P(PSTR(" "), false);
-    oled_write_P(PSTR("NUM"), led_usb_state & (1 << USB_LED_NUM_LOCK));
-    oled_write_P(PSTR(" "), false);
-    oled_write_P(PSTR("CAPS"), led_usb_state & (1 << USB_LED_CAPS_LOCK));
-    oled_write_P(PSTR("      "), false);
-}
-void render_mod_status(uint8_t modifiers) {
-    oled_write_P(PSTR("Mod: "), false);
-    oled_write_P(PSTR("Shft"), (modifiers & MOD_MASK_SHIFT));
-    oled_write_P(PSTR(" "), false);
-    oled_write_P(PSTR("Ctl"), (modifiers & MOD_MASK_CTRL));
-    oled_write_P(PSTR(" "), false);
-    oled_write_P(PSTR("Alt"), (modifiers & MOD_MASK_ALT));
-    oled_write_P(PSTR(" "), false);
-    oled_write_P(PSTR("Win"), (modifiers & MOD_MASK_GUI));
-}
-void render_status_main(void) {
-    render_default_layer_state();
-    render_keylock_status(host_keyboard_leds());
-    render_mod_status(get_mods() | get_oneshot_mods());
-}
-d render_status_secondary(void) {
-    oled_write("Bite me.", false);
-}
-void oled_task_user(void) {
-    if (timer_elapsed(oled_timer) > 60000) {
-        oled_off();
-        return;
-    }
-    if (is_master) {
-        render_status_main();
-    } else {
-        render_status_secondary();
-    }
-}
-#endif
-*/

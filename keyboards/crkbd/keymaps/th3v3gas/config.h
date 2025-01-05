@@ -30,3 +30,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TAP_CODE_DELAY 50
 #define COMBO_TERM 50
 #define OLED_DISABLE_TIMEOUT
+#define SSD1306OLED
