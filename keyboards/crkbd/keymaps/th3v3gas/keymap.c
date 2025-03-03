@@ -364,7 +364,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 *	+-----------------------------------+  +-----------------------------------+
 *	|  .  | PTT |  q  |  w  |  e  |  r  |  |  y  |  u  |  i  |  o  |  p  |bspce|  macro PTT
 *	|-----------------------------------|  |-----------------------------------+
-*	|_FNGM|  g  |  a  |  s  |  d  |  f  |  |  h  |  J  |  k  |  l  |  ;  |FNWIN|
+*	|_FNGM|  g  |  a  |  s  |  d  |  f  |  |  h  |  J  |  k  |  l  |  \| |FNWIN|
 *	|-----------------------------------|  |-----------------------------------+
 *	|shift|  b  |  z  |  x  |  c  |  v  |  |  n  |  m  | VOL | MIC |QGWOX|GCHAT|  macro GCHAT
 *	+-----------------------------------|  |-----------------------------------+
@@ -373,7 +373,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
 	[_GAME] = LAYOUT(
     KC_DOT,M_PPT,KC_Q,KC_W,KC_E,KC_R,  KC_J,KC_U,KC_I,KC_O,KC_P,KC_BSPC,
-  MO(_FNGM),KC_G,KC_A,KC_S,KC_D,KC_F,  KC_H,KC_J,KC_K,KC_L,KC_SCLN,TD(TD_FNWIN),
+  MO(_FNGM),KC_G,KC_A,KC_S,KC_D,KC_F,  KC_H,KC_J,KC_K,KC_L,KC_BSLS,TD(TD_FNWIN),
     KC_LSFT,KC_B,KC_Z,KC_X,KC_C,KC_V,  KC_N,KC_M,M_VOL,M_MIC,TD(TD_QGWOX),M_GCHAT,
               KC_LCTL,KC_LALT,KC_SPC,  KC_PAUS,LT(_NM,KC_LBRC),LALT_T(KC_RBRC)),
 
